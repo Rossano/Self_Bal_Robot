@@ -1,9 +1,11 @@
 // Do not remove the include below
-#include "Sel_Balancing_Bot.h"
+#include "Self_Balancing_Bot.h"
 
 #include <Wire.h>
 
 #include <I2Cdev.h>
+
+#undef USE_NILRTOS
 
 //#include <helper_3dmath.h>
 //#include <MPU6050.h>
@@ -16,14 +18,19 @@
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <helper_3dmath.h>
 */
+#ifdef USE_NILRTOS
 #include <NilRTOS.h>
+#endif
 
 #include "board.h"
 #include "imu_mpu6050.h"
 
+#ifdef USE_NILRTOS
 #include <NilTimer1.h>
 
 #define STACKSIZE	32
+#endif
+
 #define PROMPT		"CALLOGERO>"
 
 uint32_t idleCount = 0;
@@ -32,7 +39,7 @@ extern float ypr[3];
 //bool isConnected = false;
 //bool blinkState = false;
 
-
+#ifdef USE_NILRTOS
 //MPU6050 mpu;
 //extern SEMAPHORE_DECL(dmpSem, 1);
 extern semaphore_t dmpSem;
@@ -40,8 +47,13 @@ extern semaphore_t dmpSem;
 
 NIL_WORKING_AREA(waSelf_Balancing_Thread, STACKSIZE);
 NIL_WORKING_AREA(waControl_Thread, STACKSIZE);
+#endif
 
 extern bool mpuInterrupt;
+
+void initiate_robot();
+
+#ifdef USE_NILRTOS
 
 NIL_THREAD(self_balancing_thread, arg)
 {
@@ -100,6 +112,7 @@ NIL_THREADS_TABLE_BEGIN()
 	NIL_THREADS_TABLE_ENTRY("Control", control_thread, NULL, waControl_Thread, sizeof(waControl_Thread))
 NIL_THREADS_TABLE_END()
 
+#endif
 
 //The setup function is called once at startup of the sketch
 void setup()
@@ -122,17 +135,23 @@ void setup()
 
 	Serial.print(PROMPT);
 
+#ifdef USE_NILRTOS
 	nilSysBegin();
+#endif
 }
 
 // The loop function is called in an endless loop
 void loop()
 {
 //Add your repeated code here
+#ifdef USE_NILRTOS
 	noInterrupts();
 	Serial.print("idle #: ");
 	Serial.println(++idleCount);
 	interrupts();
+#else
+	imu_read();
+#endif
 }
 
 void initialize_robot(void)
@@ -154,7 +173,7 @@ void initialize_robot(void)
 
 	pinMode(IRQ_PORT, INPUT);
 	digitalWrite(IRQ_PORT, HIGH);
-	attachInterrupt(DMP_IRQ, imu_isr, RISING); //CHANGE);
+	attachInterrupt(DMP_IRQ, imu_isr, CHANGE);
 	Serial.print("IRQ on pin: D");
 	Serial.println(IRQ_PORT);
 }
