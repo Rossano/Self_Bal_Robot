@@ -51,8 +51,6 @@ NIL_WORKING_AREA(waControl_Thread, STACKSIZE);
 
 extern bool mpuInterrupt;
 
-void initiate_robot();
-
 #ifdef USE_NILRTOS
 
 NIL_THREAD(self_balancing_thread, arg)

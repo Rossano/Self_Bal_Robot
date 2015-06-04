@@ -16,11 +16,20 @@
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <helper_3dmath.h>
 
+#undef USE_NILRTOS
+
+#ifdef USE_NILRTOS
 #include <NilRTOS.h>
+#endif
 
 #include "board.h"
 #include "imu_mpu6050.h"
 
+#ifdef USE_NILRTOS
+#define sleep(a)	nilThdSleep(a)
+#else
+#define sleep(a)	delay(a)
+#endif
 
 MPU6050 mpu;
 
@@ -39,7 +48,10 @@ VectorFloat gravity;
 //extern SEMAPHORE_DECL(dmpSem, 1);
 bool blinkState;
 bool isConnected;
+
+#ifdef USE_NILRTOS
 SEMAPHORE_DECL(dmpSem, 1);
+#endif
 
 void imu_init()
 {
@@ -181,10 +193,12 @@ void imu_read()
 					Serial.println(")");
 					while (true) {
 						//delay(300);
-						nilThdSleep(300);
+						//nilThdSleep(300);
+						sleep(300);
 						digitalWrite(SOL_LED, 0);
 						//delay(300);
-						nilThdSleep(300);
+						//nilThdSleep(300);
+						sleep(300);
 						digitalWrite(SOL_LED, 1);
 					}
 				}
@@ -210,7 +224,8 @@ void imu_read()
 	digitalWrite(SOL_LED, blinkState);
 			
 	//delay(1);
-	nilThdSleep(1);
+	//nilThdSleep(1);
+	sleep(1);
 }
 
 void imu_reset()
@@ -222,10 +237,14 @@ void imu_reset()
 void imu_isr()
 {
 	Serial.print("ISR");
+#ifdef USE_NILRTOS
 	NIL_IRQ_PROLOGUE();
+#endif
 	mpuInterrupt = true;
+#ifdef USE_NILRTOS
 	nilSysLockFromISR();
 	nilSemSignalI(&dmpSem);
 	nilSysUnlockFromISR();
-	NIL_IRQ_EPILOGUE();	
+	NIL_IRQ_EPILOGUE();
+#endif
 }
