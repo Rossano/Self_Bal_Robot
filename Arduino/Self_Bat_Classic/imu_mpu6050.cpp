@@ -3,7 +3,7 @@
  *
  * Created: 25/03/2015 23:00:38
  *  Author: rpantaleoni
- */ 
+ */
 /*
 #include <Wire.h>
 #include <I2Cdev.h>
@@ -16,20 +16,16 @@
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <helper_3dmath.h>
 
-#undef USE_NILRTOS
+// Flag to identify the use of NILRTOS
+#define USE_NILRTOS				0	// 0 standard sketch, 1 NILRTOS
 
-#ifdef USE_NILRTOS
-#include <NilRTOS.h>
+#if (USE_NILROTS == 1)
+	#include <NilRTOS.h>
 #endif
 
 #include "board.h"
 #include "imu_mpu6050.h"
 
-#ifdef USE_NILRTOS
-#define sleep(a)	nilThdSleep(a)
-#else
-#define sleep(a)	delay(a)
-#endif
 
 MPU6050 mpu;
 
@@ -49,15 +45,15 @@ VectorFloat gravity;
 bool blinkState;
 bool isConnected;
 
-#ifdef USE_NILRTOS
-SEMAPHORE_DECL(dmpSem, 1);
+#if (USE_NILRTOS == 1)
+	SEMAPHORE_DECL(dmpSem, 1);
 #endif
 
 void imu_init()
 {
-		
+
 	uint8_t count = 10;
-	
+
     // initialize device
     Serial.println("Initializing I2C devices...");
     mpu.initialize();
@@ -75,11 +71,11 @@ void imu_init()
     // load and configure the DMP
     Serial.println(F("Initializing DMP..."));
 	do {
-	
+
 		devStatus = mpu.dmpInitialize();
-		
+
 		// make sure it worked (returns 0 if so)
-		if (devStatus == 0) 
+		if (devStatus == 0)
 		{
 			count = 10;
 			// turn on the DMP, now that it's ready
@@ -95,7 +91,7 @@ void imu_init()
 			// get expected DMP packet size for later comparison
 			packetSize = mpu.dmpGetFIFOPacketSize();
 			return;
-		} 
+		}
 		else {
 			// ERROR!
 			// 1 = initial memory load failed
@@ -109,15 +105,15 @@ void imu_init()
 		}
 	}
 	while (--count);
-	
-	// configure LED for output	
+
+	// configure LED for output
 	pinMode(SOL_LED, OUTPUT);
-	
+
 	// Check if the configuration has failed
-//	if (!count) 
-	{	
+//	if (!count)
+	{
 		Serial.println("DMP initialization failed");
-		while (true) 
+		while (true)
 		{
 			// Locks in infinite loop
 			digitalWrite(SOL_LED, HIGH);
@@ -126,13 +122,13 @@ void imu_init()
 			delay(300);
 		}
 	}
-	
+
 }
 
 void imu_read()
 {
 	uint8_t count = 3;
-			
+
 	// if programming failed, don't try to do anything
 	if (!dmpReady) return;
 
@@ -157,24 +153,24 @@ void imu_read()
 		Serial.println("FIFO overflow!");
 
 		// otherwise, check for DMP data ready interrupt (this should happen frequently)
-	} 
+	}
 	else if (mpuIntStatus & 0x02) {
 		// wait for correct available data length, should be a VERY short wait
 		while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
 		// read a packet from FIFO
 		mpu.getFIFOBytes(fifoBuffer, packetSize);
-			
+
 		// track FIFO count here in case there is > 1 packet available
 		// (this lets us immediately read more without waiting for an interrupt)
 		fifoCount -= packetSize;
 
 		// display Euler angles in degrees
 		mpu.dmpGetQuaternion(&q, fifoBuffer);
-			
-		if(lastQ == q) 
+
+		if(lastQ == q)
 		{
-			if(--count) 
+			if(--count)
 			{
 				Serial.println("*****************\nLOCKED\n************************");
 				dmpReady = false;
@@ -193,12 +189,18 @@ void imu_read()
 					Serial.println(")");
 					while (true) {
 						//delay(300);
-						//nilThdSleep(300);
-						sleep(300);
+#if (USE_NILRTOS == 1)
+						nilThdSleep(300);
+#else
+						delay(300);
+#endif
 						digitalWrite(SOL_LED, 0);
 						//delay(300);
-						//nilThdSleep(300);
-						sleep(300);
+#if (USE_NILRTOS == 1)
+						nilThdSleep(300);
+#else
+						delay(300);
+#endif
 						digitalWrite(SOL_LED, 1);
 					}
 				}
@@ -222,10 +224,13 @@ void imu_read()
 	// blink LED to indicate activity
 	blinkState = !blinkState;
 	digitalWrite(SOL_LED, blinkState);
-			
-	//delay(1);
-	//nilThdSleep(1);
-	sleep(1);
+
+#if (USE_NILRTOS == 1)
+	nilThdSleep(1);
+#else
+	delay(1);
+#endif
+
 }
 
 void imu_reset()
@@ -237,14 +242,19 @@ void imu_reset()
 void imu_isr()
 {
 	Serial.print("ISR");
-#ifdef USE_NILRTOS
+#if (USE_NILRTOS == 1)
 	NIL_IRQ_PROLOGUE();
 #endif
 	mpuInterrupt = true;
-#ifdef USE_NILRTOS
+#if (USE_NILRTOS == 1)
 	nilSysLockFromISR();
 	nilSemSignalI(&dmpSem);
 	nilSysUnlockFromISR();
 	NIL_IRQ_EPILOGUE();
 #endif
 }
+
+
+
+
+
