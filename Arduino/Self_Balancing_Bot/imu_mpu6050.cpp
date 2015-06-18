@@ -16,7 +16,11 @@
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <helper_3dmath.h>
 
+/*
+ * Firmware Configuration session
+ */
 #undef USE_NILRTOS
+#undef IRQ_DEBUG
 
 #ifdef USE_NILRTOS
 #include <NilRTOS.h>
@@ -136,7 +140,9 @@ void imu_read()
 	// if programming failed, don't try to do anything
 	if (!dmpReady) return;
 
+#ifdef IRQ_DEBUG
 	Serial.println("DMP is ready!\nAwaiting for IRQ ready flag");
+#endif
 	// wait for MPU interrupt or extra packet(s) available
 /*	while (!mpuInterrupt && fifoCount < packetSize) {
 //		Serial.println("Shouldn't get here...");
@@ -206,7 +212,9 @@ void imu_read()
 		}
 	}
 	else {
+#ifdef IRQ_DEBUG
 		Serial.print("OK ");
+#endif
 		count = 3;
 		lastQ = q;
 		mpu.dmpGetGravity(&gravity, &q);
@@ -236,7 +244,9 @@ void imu_reset()
 
 void imu_isr()
 {
+#ifdef IRQ_DEBUG
 	Serial.print("ISR");
+#endif
 #ifdef USE_NILRTOS
 	NIL_IRQ_PROLOGUE();
 #endif
