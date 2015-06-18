@@ -42,7 +42,7 @@ uint16_t fifoCount;
 uint8_t fifoBuffer[64];
 
 Quaternion q, lastQ(0,0,0,0);
-float ypr[3];
+// float ypr[3];
 VectorFloat gravity;
 
 //extern SEMAPHORE_DECL(dmpSem, 1);
@@ -73,7 +73,7 @@ void imu_init()
     while (Serial.available() && Serial.read()); // empty buffer again
 */
     // load and configure the DMP
-    Serial.println(F("Initializing DMP..."));
+    Serial.println(("Initializing DMP..."));
 	do {
 	
 		devStatus = mpu.dmpInitialize();

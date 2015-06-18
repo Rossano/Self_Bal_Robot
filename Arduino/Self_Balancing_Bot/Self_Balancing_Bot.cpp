@@ -24,6 +24,8 @@
 
 #include "board.h"
 #include "imu_mpu6050.h"
+#include "Pid.h"
+#include "motor.h"
 
 #ifdef USE_NILRTOS
 #include <NilTimer1.h>
@@ -32,10 +34,17 @@
 #endif
 
 #define PROMPT		"CALLOGERO>"
+#define LAG_TIME	10
 
 uint32_t idleCount = 0;
 uint32_t t0, t1;
+
 extern float ypr[3];
+int pwm;
+Pid pid;
+Motor left_motor(MOTOR_SHIELD_DIRA, MOTOR_SHIELD_PWMA);
+Motor right_motor(MOTOR_SHIELD_DIRB, MOTOR_SHIELD_PWMB);
+
 //bool isConnected = false;
 //bool blinkState = false;
 
@@ -149,6 +158,10 @@ void loop()
 	interrupts();
 #else
 	imu_read();
+	pwm = pid.compute(ypr[1]);
+	left_motor.move(pwm);
+	right_motor.move(pwm);
+	delay(LAG_TIME);
 #endif
 }
 
