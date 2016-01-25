@@ -19,10 +19,23 @@
 
 //#include "imu_mpu6050.h"
 
-
+//
+//	Motor Control Pin
+//
+#define MOTOR_E1	4
+#define MOTOR_M1	5
+#define MOTOR_E2	6
+#define MOTOR_M2	7
+//
+//	IMU Pin
+//
 #define DMP_IRQ		2
 #define IRQ_PORT	0
+//
+//	Sign of Life Pin
+//
 #define SOL_LED		13
+
 
 #define BAUDRATE	115200U
 

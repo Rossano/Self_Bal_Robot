@@ -13,6 +13,11 @@
 
 #include <I2Cdev.h>
 //#include <MPU6050.h>
+
+#if I2CDEV_IMPLEMENTATIO == I2CDEV_ARDUINO_WIRE
+#include <Wire.h>
+#endif
+
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <helper_3dmath.h>
 
@@ -21,6 +26,7 @@
  */
 #undef USE_NILRTOS
 #undef IRQ_DEBUG
+#undef DEBUG
 
 #ifdef USE_NILRTOS
 #include <NilRTOS.h>
@@ -38,7 +44,7 @@
 MPU6050 mpu;
 
 bool dmpReady;
-bool mpuInterrupt = false;
+volatile bool mpuInterrupt = false;
 uint8_t mpuIntStatus;
 uint8_t devStatus;
 uint16_t packetSize;
@@ -47,6 +53,7 @@ uint8_t fifoBuffer[64];
 
 Quaternion q, lastQ(0,0,0,0);
 float ypr[3];
+int16_t gyro[3];
 VectorFloat gravity;
 
 //extern SEMAPHORE_DECL(dmpSem, 1);
@@ -63,12 +70,12 @@ void imu_init()
 	uint8_t count = 10;
 	
     // initialize device
-    Serial.println("Initializing I2C devices...");
+    Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
 
     // verify connection
-    Serial.println("Testing device connections...");
-    Serial.println(mpu.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+    Serial.println(F("Testing device connections..."));
+    Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 /*
     // wait for ready
     Serial.println(F("\nSend any character to begin DMP programming and demo: "));
@@ -81,7 +88,11 @@ void imu_init()
 	do {
 	
 		devStatus = mpu.dmpInitialize();
-		
+		// Set some offset to the MEMS
+		mpu.setXGyroOffset(220);
+		mpu.setYGyroOffset(76);
+		mpu.setZGyroOffset(-85);
+		mpu.setZAccelOffset(1788);
 		// make sure it worked (returns 0 if so)
 		if (devStatus == 0) 
 		{
@@ -105,11 +116,11 @@ void imu_init()
 			// 1 = initial memory load failed
 			// 2 = DMP configuration updates failed
 			// (if it's going to break, usually the code will be 1)
-			Serial.print("DMP Initialization failed (code ");
+			Serial.print(F("DMP Initialization failed (code "));
 			Serial.print(devStatus);
-			Serial.println(")");
+			Serial.println(F(")"));
 			// New attempt message
-			Serial.println("Trying again");
+			Serial.println(F("Trying again"));
 		}
 	}
 	while (--count);
@@ -141,7 +152,7 @@ void imu_read()
 	if (!dmpReady) return;
 
 #ifdef IRQ_DEBUG
-	Serial.println("DMP is ready!\nAwaiting for IRQ ready flag");
+	Serial.println(F("DMP is ready!\nAwaiting for IRQ ready flag"));
 #endif
 	// wait for MPU interrupt or extra packet(s) available
 /*	while (!mpuInterrupt && fifoCount < packetSize) {
@@ -149,6 +160,7 @@ void imu_read()
 	}
 	Serial.println("DMP flag OK");
 */
+	while(!mpuInterrupt && fifoCount < packetSize) ;
 	// reset interrupt flag and get INT_STATUS byte
 	mpuInterrupt = false;
 	mpuIntStatus = mpu.getIntStatus();
@@ -160,7 +172,7 @@ void imu_read()
 	if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
 		// reset so we can continue cleanly
 		mpu.resetFIFO();
-		Serial.println("FIFO overflow!");
+		Serial.println(F("FIFO overflow!"));
 
 		// otherwise, check for DMP data ready interrupt (this should happen frequently)
 	} 
@@ -184,7 +196,7 @@ void imu_read()
 			{
 				Serial.println("*****************\nLOCKED\n************************");
 				dmpReady = false;
-				Serial.println("MPU stalled, reinitializing...");
+				Serial.println(F("MPU stalled, reinitializing..."));
 				mpu.reset();
 				if ((devStatus = mpu.dmpInitialize()) == 0)
 				{
@@ -194,7 +206,7 @@ void imu_read()
 					packetSize = mpu.dmpGetFIFOPacketSize();
 				}
 				else {
-					Serial.print("DMP reinitialization failed (code ");
+					Serial.print(F("DMP reinitialization failed (code "));
 					Serial.print(devStatus);
 					Serial.println(")");
 					while (true) {
@@ -213,18 +225,23 @@ void imu_read()
 	}
 	else {
 #ifdef IRQ_DEBUG
-		Serial.print("OK ");
+		Serial.print(F("OK "));
 #endif
 		count = 3;
 		lastQ = q;
 		mpu.dmpGetGravity(&gravity, &q);
 		mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-		Serial.print("ypr\t");
+		mpu.dmpGetGyro(gyro, fifoBuffer);
+#ifdef DEBUG
+		Serial.print(F("ypr gyro\t"));
 		Serial.print(ypr[0] * 180/M_PI);
-		Serial.print("\t");
+		Serial.print(F("\t"));
 		Serial.print(ypr[1] * 180/M_PI);
-		Serial.print("\t");
-		Serial.println(ypr[2] * 180/M_PI);
+		Serial.print(F("\t"));
+		Serial.print(ypr[2] * 180/M_PI);
+		Serial.print(F("\t"));
+		Serial.println(gyro);
+#endif
 	}
 
 	// blink LED to indicate activity
@@ -245,7 +262,7 @@ void imu_reset()
 void imu_isr()
 {
 #ifdef IRQ_DEBUG
-	Serial.print("ISR");
+	Serial.print(F("ISR"));
 #endif
 #ifdef USE_NILRTOS
 	NIL_IRQ_PROLOGUE();

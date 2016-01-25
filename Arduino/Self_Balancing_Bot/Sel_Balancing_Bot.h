@@ -28,7 +28,7 @@ extern bool isConnected;
 extern bool blinkState;
 
 void initialize_robot(void);
-
+extern void vGetValues(int argc, char *argv[]):  		// Get the IMU and feedback values
 
 
 //Do not add code below this line
