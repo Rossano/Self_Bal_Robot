@@ -51,6 +51,9 @@ uint8_t count = 0;
 extern float ypr[3];
 extern int16_t gyro[3];
 int pwm = 0;
+Motor left_motor(MOTOR_SHIELD_DIRA, MOTOR_SHIELD_PWMA);
+Motor right_motor(MOTOR_SHIELD_DIRB, MOTOR_SHIELD_PWMB);
+
 //bool isConnected = false;
 //bool blinkState = false;
 //_motor motor;
