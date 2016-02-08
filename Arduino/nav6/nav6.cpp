@@ -36,6 +36,8 @@ THE SOFTWARE.
 */
 
 #define EMPL_TARGET_ATMEGA328
+#undef PERFORM_CALIBRATION_IN_LOOP
+
 #include <Wire.h>
 #include <I2Cdev.h>
 //#include "libraries/I2Cdev/I2Cdev.h"
@@ -69,7 +71,7 @@ extern "C" {
 #ifdef USE_COMPASS
 volatile boolean compass_data_ready = false;
 void compassDataAvailable() {
-compass_data_ready = true;
+	compass_data_ready = true;
 }
 #endif
 
@@ -121,15 +123,18 @@ void setup() {
 	Serial.begin(57600);
 	while (!Serial); // wait for Leonardo enumeration, others continue immediately
 
-	Serial.println();
-	Serial.println();
-	Serial.print( ("Kauai Labs nav6 IMU firmware v. ") );
+	//Serial.println();
+	//Serial.println();
+	Serial.print( F("\n\nKauai Labs nav6 IMU firmware v. ") );
 	Serial.print( NAV6_FIRMWARE_VERSION_MAJOR,DEC);
-	Serial.print( (".") );
+	Serial.print( F(".") );
 	Serial.println( NAV6_FIRMWARE_VERSION_MINOR,DEC);
 
-	Serial.print( ("Free Memory: ") );
+	Serial.print( F("Free Memory: ") );
 	Serial.println( freeMemory() );
+//	char buf[48];
+//	sprintf(buf, "\n\nKauai Labs nav6 firmware v. %d.%d\nFree Memory: %d\n", NAV6_FIRMWARE_VERSION_MAJOR,
+//			NAV6_FIRMWARE_VERSION_MINOR, freeMemory());
 
 #ifdef USE_COMPASS
 	// Digital Compass Initialization
@@ -175,29 +180,30 @@ void setup() {
 	// Gyro Low-pass filter: 42Hz
 	// DMP Update rate: 100Hz
 
-	Serial.print(("Initializing MPU..."));
+	Serial.print(F("Initializing MPU..."));
 	Serial.flush();
 	boolean mpu_initialized = false;
 	while ( !mpu_initialized ) {
 		digitalWrite(STATUS_LED,HIGH);
 		if ( initialize_mpu() ) {
 			mpu_initialized = true;
-			Serial.print(("Success"));
+			Serial.print(F("Success"));
 			//boolean gyro_ok, accel_ok;
 			//run_mpu_self_test(gyro_ok,accel_ok);
 			enable_mpu();
 		}
 		else {
 			digitalWrite(STATUS_LED,LOW);
-			Serial.print(("Failed"));
+			Serial.print(F("Failed"));
 			mpu_force_reset();
 			delay(100);
-			Serial.println(("Re-initializing"));
+			//Serial.println(F("Re-initializing"));
+			Serial.print(F("Re-initializing\n"));
 			Serial.flush();
 		}
 	}
-	Serial.println();
-	Serial.println(("Initialization Complete"));
+	//Serial.println();
+	Serial.print(F("\nInitialization Complete\n"));
 	Serial.flush();
 	digitalWrite(STATUS_LED,LOW);
 }
@@ -231,6 +237,7 @@ float calibrated_yaw_offset = 0.0;
 //float calibrated_quaternion_offset[4] = { 0.0, 0.0, 0.0, 0.0 };
 Quaternion calibrated_quaternion_offset(0.0, 0.0, 0.0, 0.0);
 
+#if USE_COMPASS
 /******************************************
 * Magnetometer State
 ******************************************/
@@ -241,12 +248,15 @@ int16_t mag_z = 0;
 
 float compass_heading_radians = 0.0;
 float compass_heading_degrees = 0.0;
+#endif
 
 /****************************************
 * Gyro/Accel/DMP State
 ****************************************/
-
+#ifdef TEMPERATURE
 float temp_centigrade = 0.0; // Gyro/Accel die temperature
+#endif
+
 float ypr[3] = { 0, 0, 0 };
 long curr_mpu_temp;
 unsigned long sensor_timestamp;
@@ -384,6 +394,7 @@ void loop() {
 			getGravity(&gravity, &q);
 			dmpGetYawPitchRoll(ypr, &q, &gravity);
 
+#ifdef PERFORM_CALIBRATION_IN_LOOP
 			boolean accumulate = false;
 			if ( calibration_state == NAV6_CALIBRATION_STATE_WAIT ) {
 
@@ -424,9 +435,7 @@ void loop() {
 					sendQuaternion(calibrated_quaternion_offset);
 				}
 				else {
-
 					calibration_accumulator_count++;
-
 				}
 			}
 
@@ -475,6 +484,9 @@ void loop() {
 				Serial.print(gyro[1]);
 				Serial.print(":");
 				Serial.println(gyro[2]);
+//				char buf[20];
+//				sprintf(buf, "GRY:%d:%d:%d\n", gyro[0], gyro[1], gyro[2]);
+//				Serial.print(buf);
 			}
 			else {
 
@@ -500,9 +512,14 @@ void loop() {
 //				Quaternion q_product;
 //				Quaternion q_conjugate;
 				Quaternion q_final;
+				//
+				//	NOT USED
+				//
+#ifdef NOT_USED
 				float world_linear_acceleration_x;
 				float world_linear_acceleration_y;
 				float world_linear_acceleration_z;
+#endif
 
 				// calculate linear acceleration by
 				// removing the gravity component from raw acceleration values
@@ -573,7 +590,7 @@ q_final = (q1 * q2) * (!q1);
 				Serial.write((unsigned char *)protocol_buffer, num_bytes);*/
 				sendYawPitchRoll(x, y, z);
 			}
-
+#endif
 		}
 		else {
 
@@ -689,6 +706,7 @@ q_final = (q1 * q2) * (!q1);
 		Serial.write((unsigned char *)protocol_buffer, num_bytes);
 		sendQuaternion(calibrated_quaternion_offset);
 	} */
+
 }
 
 /* Every time new gyro data is available, this function is called in an
@@ -699,6 +717,7 @@ void gyro_data_ready_cb(void) {
 
 	hal.new_gyro = 1;
 }
+
 
 /* These next two functions converts the orientation matrix (see
 * gyro_orientation) to a scalar representation for use by the DMP.
@@ -761,7 +780,7 @@ boolean initialize_mpu() {
 	result = mpu_init(&int_param);
 
 	if ( result != 0 ) {
-		Serial.print("mpu_init failed!");
+		Serial.print(F("mpu_init failed!"));
 		return false;
 	}
 
@@ -813,8 +832,11 @@ boolean initialize_mpu() {
 	*/
 	result = dmp_load_motion_driver_firmware();
 	if ( result != 0 ) {
-		Serial.print("Firmware Load ERROR ");
+		Serial.print(F("Firmware Load ERROR "));
 		Serial.println(result);
+//		char buf[5];
+//		sprintf(buf, "%d\n", result);
+//		Serial.print(buf);
 		return false;
 	}
 	dmp_set_orientation(
@@ -838,6 +860,7 @@ void enable_mpu() {
 	hal.dmp_on = 1;
 }
 
+#ifdef NOT_USED
 boolean run_mpu_self_test(boolean& gyro_ok, boolean& accel_ok) {
 
 	int result;
@@ -872,6 +895,8 @@ boolean run_mpu_self_test(boolean& gyro_ok, boolean& accel_ok) {
 
 	return success;
 }
+
+#endif
 
 void getEuler(float *data, Quaternion *q) {
 
@@ -942,22 +967,28 @@ int freeMemory() {
 
 void sendQuaternion(Quaternion & q)
 {
-	Serial.print("QUAD:");
+	Serial.print(F("QUAD:"));
 	Serial.print(q.w);
-	Serial.print(":");
+	Serial.print(F(":"));
 	Serial.print(q.x);
-	Serial.print(":");
+	Serial.print(F(":"));
 	Serial.print(q.y);
-	Serial.print(":");
+	Serial.print(F(":"));
 	Serial.println(q.z);
+//	char buf[32];
+//	int num = sprintf(buf, "QUAD:%d:%d:%d:%d\n", q.w, q.x, q.y, q.z);
+//	Serial.print(buf);
 }
 
 void sendYawPitchRoll(float y, float p, float r)
 {
-	Serial.print("DMP:");
+	Serial.print(F("DMP:"));
 	Serial.print(y);
-	Serial.print(":");
+	Serial.print(F(":"));
 	Serial.print(p);
-	Serial.print(":");
+	Serial.print(F(":"));
 	Serial.println(r);
+//	char buf[32];
+//	int num = sprintf(buf, "DMP:%d:%d:%d\n", y, p, r);
+//	Serial.print(buf);
 }
