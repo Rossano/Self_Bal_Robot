@@ -322,40 +322,42 @@ boolean update_type = 'y'; //MSGID_YPR_UPDATE;
 
 void loop() {
 
-	  /*
+#ifdef USE_COMPASS
+
 	// Read compass heading data if it has been updated recently.
 
 	if ( compass_data_ready ) {
 
-	if ( ( update_type == MSGID_QUATERNION_UPDATE ) || ( update_type == MSGID_GYRO_UPDATE ) ) {
+		if ( ( update_type == MSGID_QUATERNION_UPDATE ) || ( update_type == MSGID_GYRO_UPDATE ) ) {
 
-	compass.getValues(&mag_x, &mag_y, &mag_z);
+			compass.getValues(&mag_x, &mag_y, &mag_z);
 
-	mpu_get_temperature(&curr_mpu_temp, &sensor_timestamp);
-	temp_centigrade = (float)curr_mpu_temp;
-	temp_centigrade /= 65536.0;
+			mpu_get_temperature(&curr_mpu_temp, &sensor_timestamp);
+			temp_centigrade = (float)curr_mpu_temp;
+			temp_centigrade /= 65536.0;
+		}
+		else {
+
+			// Read latest heading from compass
+			// Note that the compass heading is tilt compensated based upon
+			// previous pitch/roll readings from the MPU
+			compass_heading_radians = compass.compassHeadingTiltCompensatedRadians(-ypr[1], ypr[2]);
+			compass_heading_degrees = compass_heading_radians * radians_to_degrees;
+
+			// Adjust compass for board orientation,
+			// and modify range from -180-180 to
+			// 0-360 degrees
+
+			compass_heading_degrees -= 90.0;
+			if ( compass_heading_degrees < 0 ) {
+				compass_heading_degrees += 360;
+			}
+
+		}
+			compass_data_ready = false;
 	}
-	else {
 
-	// Read latest heading from compass
-	// Note that the compass heading is tilt compensated based upon
-	// previous pitch/roll readings from the MPU
-	compass_heading_radians = compass.compassHeadingTiltCompensatedRadians(-ypr[1], ypr[2]);
-	compass_heading_degrees = compass_heading_radians * radians_to_degrees;
-
-	// Adjust compass for board orientation,
-	// and modify range from -180-180 to
-	// 0-360 degrees
-
-	compass_heading_degrees -= 90.0;
-	if ( compass_heading_degrees < 0 ) {
-	compass_heading_degrees += 360;
-	}
-
-	}
-	compass_data_ready = false;
-	}
-	*/
+#endif
 
 	// If the MPU Interrupt occurred, read the fifo and process the data
 
@@ -395,6 +397,9 @@ void loop() {
 			dmpGetYawPitchRoll(ypr, &q, &gravity);
 
 #ifdef PERFORM_CALIBRATION_IN_LOOP
+			// Code performing the calibration inside the loop.
+			// 	Not strictly needed normally, to be checked.
+			// Skip it out to reduce the flash code occupation
 			boolean accumulate = false;
 			if ( calibration_state == NAV6_CALIBRATION_STATE_WAIT ) {
 
@@ -590,6 +595,13 @@ q_final = (q1 * q2) * (!q1);
 				Serial.write((unsigned char *)protocol_buffer, num_bytes);*/
 				sendYawPitchRoll(x, y, z);
 			}
+#else
+			// Print the Yaw, Pitch and Roll angles
+			// Need to check that the code is alive
+			float y = ypr[0] * radians_to_degrees;
+			float p = ypr[1] * radians_to_degrees;
+			float r = ypr[2] * radians_to_degrees;
+			sendYawPitchRoll(y, p, r);
 #endif
 		}
 		else {
