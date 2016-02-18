@@ -29,7 +29,7 @@
 		<link>
 			<name>Libraries/I2Cdev</name>
 			<type>2</type>
-			<locationURI>ArduinoPivateLibPath/I2Cdev</locationURI>
+			<locationURI>ArduinoLibPath/I2Cdev</locationURI>
 		</link>
 		<link>
 			<name>Libraries/MPU6050</name>
@@ -65,15 +65,15 @@
 	<variableList>
 		<variable>
 			<name>ArduinoHardwareLibPath</name>
-			<value>file:/C:/arduino-1.5.1r2/hardware/arduino/avr/libraries</value>
+			<value>file:/C:/temp/arduino-1.5.1r2/hardware/arduino/avr/libraries</value>
 		</variable>
 		<variable>
 			<name>ArduinoPinPath</name>
-			<value>file:/C:/arduino-1.5.1r2/hardware/arduino/avr/variants</value>
+			<value>file:/C:/temp/arduino-1.5.1r2/hardware/arduino/avr/variants</value>
 		</variable>
 		<variable>
 			<name>ArduinoPlatformPath</name>
-			<value>file:/C:/arduino-1.5.1r2/hardware/arduino/avr</value>
+			<value>file:/C:/temp/arduino-1.5.1r2/hardware/arduino/avr</value>
 		</variable>
 	</variableList>
 </projectDescription>

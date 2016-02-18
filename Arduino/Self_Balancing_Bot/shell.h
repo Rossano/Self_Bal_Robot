@@ -8,13 +8,14 @@
 #ifndef SHELL_H_
 #define SHELL_H_
 
-#define NULL					0
+//#define NULL					0
 #define SHELL_MAX_LINE_LENGTH	16
 #define SHELL_MAX_ARGUMENTS		4
 #define SHELL_PROMPT			"AVR> "
-#define FW_VERSION				"0.5.0.0"
+#define FW_VERSION				"0.6.0.0"
 #define OS_VERSION				"N/A"
 #define CR						"\r\n"
+#undef	USE_PID
 
 //	Function prototype for the action executed by the shell
 typedef void (* shellcmd_t)(int argc, char *argv[]);
@@ -84,16 +85,19 @@ void vListCommands(ShellCommand_t *scp);
 //
 // Actions to be executed by the shell defined in different files
 //
+#ifdef USE_PID
 extern void vpidToggle(int argc, char *argv[]); 		// Toggle the PID ON & OFF
 extern void vpidSet(int argc, char *argv[]); 			// Set the PID coeff
 extern void vpidGet(int argc, char *argv[]); 			// Get the PID coeff
 extern void vpidGetError(int argc, char *argv[]); 		// Get the PID error
-extern void vMotorTurn(int argc, char *argv[]); 		// Turn the Bot
-extern void vMotorMove(int argc, char *argv[]); 		// Move the Bot
+#else
 extern void vControllerToggle(int argc, char *argv[]);	// Toggle the controller
 extern void vControllerSet(int argc, char *argv[]);		// Set the feedback vector
 extern void vControllerGet(int argc, char *argv[]);		// Get the controller feedback vector
 extern void vControllerState(int argc, char *argv[]);	// Get the state vector
+#endif
+extern void vMotorTurn(int argc, char *argv[]); 		// Turn the Bot
+extern void vMotorMove(int argc, char *argv[]); 		// Move the Bot
 extern void vGetValues(int argc, char *argv[]); 		// Get the IMU and feedback values
 //
 //	Definition of the shell commands:
@@ -104,6 +108,7 @@ static ShellCommand_t ShellCommand[]  =
 	{
 		"get_ACK",	vSendACK
 	},
+#ifdef USE_PID
 	{
 		"pid", vpidToggle
 	},
@@ -116,12 +121,7 @@ static ShellCommand_t ShellCommand[]  =
 	{
 		"pid_error", vpidGetError
 	},
-	{
-		"turn", vMotorTurn,
-	},
-	{
-		"move", vMotorMove,
-	},
+#else
 	{
 		"cont_toggle", vControllerToggle, // vControllerToggle,
 	},
@@ -133,6 +133,13 @@ static ShellCommand_t ShellCommand[]  =
 	},
 	{
 		"contr_state", vControllerState,
+	},
+#endif
+	{
+		"turn", vMotorTurn,
+	},
+	{
+		"move", vMotorMove,
 	},
 	{
 		"get_val", vGetValues,

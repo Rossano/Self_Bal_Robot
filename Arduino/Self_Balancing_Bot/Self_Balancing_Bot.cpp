@@ -1,5 +1,6 @@
 // Do not remove the include below
 #include "Self_Balancing_Bot.h"
+#include <Arduino.h>
 
 #include <Wire.h>
 
@@ -48,11 +49,11 @@ uint8_t inBufCount = 0;				//	Input buffer char counter
 uint32_t idleCount = 0;
 uint32_t t0, t1;
 uint8_t count = 0;
-extern float ypr[3];
+//extern float ypr[3];
 extern int16_t gyro[3];
 int pwm = 0;
-Motor left_motor(MOTOR_SHIELD_DIRA, MOTOR_SHIELD_PWMA);
-Motor right_motor(MOTOR_SHIELD_DIRB, MOTOR_SHIELD_PWMB);
+//Motor left_motor(MOTOR_SHIELD_DIRA, MOTOR_SHIELD_PWMA);
+//Motor right_motor(MOTOR_SHIELD_DIRB, MOTOR_SHIELD_PWMB);
 
 //bool isConnected = false;
 //bool blinkState = false;
@@ -292,7 +293,13 @@ void initialize_robot(void)
 	Serial.print(F("IRQ on pin: D"));
 	Serial.println(IRQ_PORT);
 
-	for (int i = 0; i < 4; i++) vState.set_element(0.0, i);
+	for (int i = 0; i < 4; i++) {
+#ifdef USE_STATE_VECTOR
+		vState.set_element(0.0, i);
+#else
+		vState[i] = 0.0;
+#endif
+	}
 }
 
 void vGetValues(int argc, char *argv[]) { 		// Get the IMU and feedback values

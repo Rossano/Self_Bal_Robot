@@ -31,8 +31,10 @@ class _motor {
 public:
 	eMotorMove_t moveStatus;
 	eMotorTurn_t turnStatus;
-	uint8_t uiMotorA_Offset;
-	uint8_t uiMotorB_Offset;
+	//uint8_t uiMotorA_Offset;
+	//uint8_t uiMotorB_Offset;
+	unsigned char uiMotorA_Offset;
+	unsigned char uiMotorB_Offset;
 	_motor();
 	virtual ~_motor();
 	void move_A(int);

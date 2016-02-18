@@ -12,15 +12,18 @@
 #endif
 
 #include <string.h>
-#include <stdio.h>
+//#include <stdio.h>
 
 //	My included file and headers
 #include <stddef.h>
 
-#include "controller.h"
+//#include "controller.h"
 #include "motor.h"
+#if USE_PID
 #include "pid.h"
+#else
 #include "controller.h"
+#endif
 #include "Self_Balancing_Bot.h"
 //	Shell own inclusion header
 #include "shell.h"
@@ -127,7 +130,7 @@ void cShell::ShellTask(void *p, char *line)
 		//	If there are too many arguments display an error
 		if (n > SHELL_MAX_ARGUMENTS)
 		{
-			Serial.println ("Too many arguments");
+			Serial.println (F("Too many arguments"));
 			cmd = NULL;
 			break;
 		}
@@ -179,12 +182,12 @@ void cShell::ShellTask(void *p, char *line)
 		else if (strcasecmp(cmd, "help") == 0)
 		{
 			//	Help has no arguments
-			Serial.println("Entering help");
+			Serial.println(F("Entering help"));
 			if (n > 1)
 			{
 				vUsage("help");
 			}
-			Serial.println("Commands:");
+			Serial.println(F("Commands:"));
 			//	Display the Local Commands
 			vListCommands(LocalCommands);
 			//	Display the Shell Commands
@@ -194,9 +197,9 @@ void cShell::ShellTask(void *p, char *line)
 		//	Try to Execute the other command, if it exits an error the command is not recognized
 		else if (vCmdExec(LocalCommands, cmd, n, args) && ((scp == NULL) || vCmdExec(/*scp*/ ShellCommand, cmd, n, args)))
 		{
-			Serial.print("Error: Command not recognized -> ");
+			Serial.print(F("Error: Command not recognized -> "));
 			Serial.print (cmd);
-			Serial.println (" ???");
+			//Serial.println (" ???");
 		}
 	}
 }
@@ -262,7 +265,7 @@ void vCmdSystime(int argc, char *argv[])
 		return;
 	}
 	//	Else display a string stating that it is not implemented
-	Serial.println("Sys Time: Not implemented yet\r\nOK");
+	Serial.println(F("Sys Time: Not implemented yet\r\nOK"));
 }
 
 /// <summary>
@@ -282,11 +285,11 @@ void vCmdInfo(int argc, char *argv[])
 		return;
 	}
 	//	Else display Firmware and OS versions
-	Serial.print("Firmware: ");
+	Serial.print(F("Firmware: "));
 	Serial.print(FW_VERSION);
-	Serial.print("\r\nOS Version: ");
+	Serial.print(F("\r\nOS Version: "));
 	Serial.print(OS_VERSION);
-	Serial.println("\r\nOK\r\n");
+	//Serial.println(F("\r\nOK\r\n"));
 }
 
 /// <summary>
@@ -310,7 +313,7 @@ void vListCommands(ShellCommand_t *scp)
 /// <param name="strc">Command usage string.</param>
 void vUsage(char *str)
 {
-	Serial.print("Error: Usage-> ");
+	Serial.print(F("Error: Usage-> "));
 	Serial.println(str);
 }
 
@@ -351,7 +354,7 @@ void vSendACK(int argc, char *argv[])
 	else
 	{
 		//	Send the ACK
-		Serial.println("ACK\r\nOK");
+		Serial.println(F("ACK\r\nOK"));
 	}
 }
 

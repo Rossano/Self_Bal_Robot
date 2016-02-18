@@ -14,7 +14,7 @@
 #include <I2Cdev.h>
 //#include <MPU6050.h>
 
-#if I2CDEV_IMPLEMENTATIO == I2CDEV_ARDUINO_WIRE
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #include <Wire.h>
 #endif
 
@@ -52,7 +52,7 @@ uint16_t fifoCount;
 uint8_t fifoBuffer[64];
 
 Quaternion q, lastQ(0,0,0,0);
-// float ypr[3];
+float ypr[3];
 int16_t gyro[3];
 VectorFloat gravity;
 
@@ -84,7 +84,7 @@ void imu_init()
     while (Serial.available() && Serial.read()); // empty buffer again
 */
     // load and configure the DMP
-    Serial.println(("Initializing DMP..."));
+    Serial.println(F("Initializing DMP..."));
 	do {
 	
 		devStatus = mpu.dmpInitialize();
@@ -98,13 +98,13 @@ void imu_init()
 		{
 			count = 10;
 			// turn on the DMP, now that it's ready
-			Serial.println("Enabling DMP...");
+			Serial.println(F("Enabling DMP..."));
 			mpu.setDMPEnabled(true);
 
 			mpuIntStatus = mpu.getIntStatus();
 
 			// set our DMP Ready flag so the main loop() function knows it's okay to use it
-			Serial.println("DMP ready! Waiting for first interrupt...");
+			Serial.println(F("DMP ready! Waiting for first interrupt..."));
 			dmpReady = true;
 
 			// get expected DMP packet size for later comparison
@@ -131,7 +131,7 @@ void imu_init()
 	// Check if the configuration has failed
 //	if (!count) 
 	{	
-		Serial.println("DMP initialization failed");
+		Serial.println(F("DMP initialization failed"));
 		while (true) 
 		{
 			// Locks in infinite loop
@@ -194,7 +194,7 @@ void imu_read()
 		{
 			if(--count) 
 			{
-				Serial.println("*****************\nLOCKED\n************************");
+				Serial.println(F("\nLOCKED\n"));
 				dmpReady = false;
 				Serial.println(F("MPU stalled, reinitializing..."));
 				mpu.reset();

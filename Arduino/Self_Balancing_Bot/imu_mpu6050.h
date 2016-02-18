@@ -25,7 +25,7 @@ VectorFloat gravity;
 SEMAPHORE_DECL(dmpSem, 0);
 */
 
-float ypr[3];
+extern float ypr[3];
 
 void imu_isr();
 
