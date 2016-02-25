@@ -27,6 +27,12 @@
 #undef USE_NILRTOS
 #undef IRQ_DEBUG
 #undef DEBUG
+//#define __BOARD_YUN__
+
+#ifdef __BOARD_YUN__
+#include <Bridge.h>
+#include <Console.h>
+#endif
 
 #ifdef USE_NILRTOS
 #include <NilRTOS.h>
@@ -70,12 +76,21 @@ void imu_init()
 	uint8_t count = 10;
 	
     // initialize device
+#ifdef __BOARD_YUN__
+	Console.println(F("Initializing I2C devices..."));
+#else
     Serial.println(F("Initializing I2C devices..."));
+#endif
     mpu.initialize();
 
     // verify connection
+#ifdef __BOARD_YUN__
+    Console.println(F("Testing device connections..."));
+    Console.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+#else
     Serial.println(F("Testing device connections..."));
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+#endif
 /*
     // wait for ready
     Serial.println(F("\nSend any character to begin DMP programming and demo: "));
@@ -84,7 +99,11 @@ void imu_init()
     while (Serial.available() && Serial.read()); // empty buffer again
 */
     // load and configure the DMP
+#ifdef __BOARD_YUN__
+    Console.println(F("Initializing DMP..."));
+#else
     Serial.println(F("Initializing DMP..."));
+#endif    
 	do {
 	
 		devStatus = mpu.dmpInitialize();
@@ -98,13 +117,21 @@ void imu_init()
 		{
 			count = 10;
 			// turn on the DMP, now that it's ready
+#ifdef __BOARD_YUN__
+			Console.println(F("Enabling DMP..."));
+#else			
 			Serial.println(F("Enabling DMP..."));
+#endif
 			mpu.setDMPEnabled(true);
 
 			mpuIntStatus = mpu.getIntStatus();
 
 			// set our DMP Ready flag so the main loop() function knows it's okay to use it
+#ifdef __BOARD_YUN__
+			Console.println(F("DMP ready! Waiting for first interrupt..."));
+#else
 			Serial.println(F("DMP ready! Waiting for first interrupt..."));
+#endif
 			dmpReady = true;
 
 			// get expected DMP packet size for later comparison
@@ -116,11 +143,19 @@ void imu_init()
 			// 1 = initial memory load failed
 			// 2 = DMP configuration updates failed
 			// (if it's going to break, usually the code will be 1)
+#ifdef __BOARD_YUN__
+			Console.print(F("DMP Initialization failed (code"));
+			Console.print(devStatus);
+			Console.println(F(")"));
+			// New attempt message
+			Console.println(F("Trying again"));
+#else
 			Serial.print(F("DMP Initialization failed (code "));
 			Serial.print(devStatus);
 			Serial.println(F(")"));
 			// New attempt message
 			Serial.println(F("Trying again"));
+#endif
 		}
 	}
 	while (--count);
@@ -131,7 +166,11 @@ void imu_init()
 	// Check if the configuration has failed
 //	if (!count) 
 	{	
+#ifdef __BOARD_YUN__
+		Console.println(F("DMP initializaion failed"));
+#else
 		Serial.println(F("DMP initialization failed"));
+#endif
 		while (true) 
 		{
 			// Locks in infinite loop
@@ -152,7 +191,11 @@ void imu_read()
 	if (!dmpReady) return;
 
 #ifdef IRQ_DEBUG
+	#ifdef __BOARD_YUN__
+	Console.println(F("DMP is ready!\nAwaiting for IRQ ready flag"));
+	#else
 	Serial.println(F("DMP is ready!\nAwaiting for IRQ ready flag"));
+	#endif
 #endif
 	// wait for MPU interrupt or extra packet(s) available
 /*	while (!mpuInterrupt && fifoCount < packetSize) {
@@ -172,7 +215,11 @@ void imu_read()
 	if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
 		// reset so we can continue cleanly
 		mpu.resetFIFO();
+#ifdef __BOARD_YUN__
+		Console.println(F("FIFO overflow!"));
+#else
 		Serial.println(F("FIFO overflow!"));
+#endif
 
 		// otherwise, check for DMP data ready interrupt (this should happen frequently)
 	} 
@@ -194,9 +241,15 @@ void imu_read()
 		{
 			if(--count) 
 			{
+#ifdef __BOARD_YUN__
+				Console.println(F("\nLOCKED\n"));
+				dmpReady = false;
+				Console.println(F("MPU is stalled, reinitializing..."));
+#else
 				Serial.println(F("\nLOCKED\n"));
 				dmpReady = false;
 				Serial.println(F("MPU stalled, reinitializing..."));
+#endif
 				mpu.reset();
 				if ((devStatus = mpu.dmpInitialize()) == 0)
 				{
@@ -206,9 +259,15 @@ void imu_read()
 					packetSize = mpu.dmpGetFIFOPacketSize();
 				}
 				else {
+#ifdef __BOARD_YUN__
+					Console.print(F("DMP reinitialization failed (code "));
+					Console.print(devStatus);
+					Console.println(F(")"));
+#else
 					Serial.print(F("DMP reinitialization failed (code "));
 					Serial.print(devStatus);
 					Serial.println(")");
+#endif
 					while (true) {
 						//delay(300);
 						//nilThdSleep(300);
@@ -225,7 +284,11 @@ void imu_read()
 	}
 	else {
 #ifdef IRQ_DEBUG
+		#ifdef __BOARD_YUN__
+		Console.print(F("OK"));
+		#else
 		Serial.print(F("OK "));
+		#endif
 #endif
 		count = 3;
 		lastQ = q;
@@ -233,6 +296,16 @@ void imu_read()
 		mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 		mpu.dmpGetGyro(gyro, fifoBuffer);
 #ifdef DEBUG
+	#ifdef __BOARD_YUN__
+		Console.print(F("ypr gyro\t"));
+		Console.print(ypr[0] * 180/M_PI);
+		Console.print(F("\t"));
+		Console.print(ypr[1] * 180/M_PI);
+		Console.print(F("\t"));
+		Console.print(ypr[2] * 180/M_PI);
+		Console.print(F("\t"));
+		Console.println(gyro);
+	#else
 		Serial.print(F("ypr gyro\t"));
 		Serial.print(ypr[0] * 180/M_PI);
 		Serial.print(F("\t"));
@@ -241,6 +314,7 @@ void imu_read()
 		Serial.print(ypr[2] * 180/M_PI);
 		Serial.print(F("\t"));
 		Serial.println(gyro);
+	#endif
 #endif
 	}
 
@@ -262,7 +336,11 @@ void imu_reset()
 void imu_isr()
 {
 #ifdef IRQ_DEBUG
+	#ifdef __BOARD_YUN__
+	Console.print(F("ISR"));
+	#else
 	Serial.print(F("ISR"));
+	#endif
 #endif
 #ifdef USE_NILRTOS
 	NIL_IRQ_PROLOGUE();
@@ -275,3 +353,4 @@ void imu_isr()
 	NIL_IRQ_EPILOGUE();
 #endif
 }
+

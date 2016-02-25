@@ -1,7 +1,7 @@
 /*
  * motor.cpp
  *
- *  Created on: 31 août 2015
+ *  Created on: 31 aoÃ»t 2015
  *      Author: Ross
  */
 
@@ -187,3 +187,4 @@ void vMotorMove(int argc, char *argv[]) 		// Move the Bot
 		}
 	}
 }
+

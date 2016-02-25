@@ -1,7 +1,7 @@
 /*
  * controller.cpp
  *
- *  Created on: 23 déc. 2015
+ *  Created on: 23 dÃ©c. 2015
  *      Author: rpantale
  */
 
@@ -12,6 +12,12 @@
 #include "controller.h"
 #include "shell.h"
 
+//#define __BOARD_YUN__
+#ifdef __BOARD_YUN__
+#include <Bridge.h>
+#include <Console.h>
+#endif
+ 
 //#define DEFINE_CONTROLLER_IN_LIB
 
 //using namespace math_comp;
@@ -228,10 +234,17 @@ void vControllerGet(int argc, char *argv[]) {
 	_K = controller.get_feedback_vector();
 #endif
 
+#ifdef __BOARD_YUN__
+	Console.print(_K[0]); Console.print(F("\t"));
+	Console.print(_K[1]); Console.print(F("\t"));
+	Console.print(_K[2]); Console.print(F("\t"));
+	Console.println(_K[3]);
+#else
 	Serial.print(_K[0]); Serial.print(F("\t"));
 	Serial.print(_K[1]); Serial.print(F("\t"));
 	Serial.print(_K[2]); Serial.print(F("\t"));
 	Serial.println(_K[3]);
+#endif
 }
 
 // Gets the controller state on the terminal
@@ -244,15 +257,29 @@ void vControllerState(int argc, char *argv[]) {
 
 	_K = controller.get_state();
 #ifdef USE_STATE_VECTOR
+	#ifdef __BOARD_YUN__
+	Console.print(_K[0]); Console.print(F("\t"));
+	Console.print(_K[1]); Console.print(F("\t"));
+	Console.print(_K[2]); Console.print(F("\t"));
+	Console.println(_K[3]);
+	#else
 	Serial.print(_K[0]); Serial.print(F("\t"));
 	Serial.print(_K[1]); Serial.print(F("\t"));
 	Serial.print(_K[2]); Serial.print(F("\t"));
 	Serial.println(_K[3]);
+	#endif
 #else
+	#ifdef __BOARD_YUN__
+	Console.print(*_K); Console.print(F("\t"));
+	Console.print(*(_K+1)); Console.print(F("\t"));
+	Console.print(*(_K+2)); Console.print(F("\t"));
+	Console.print(*(_K+3));
+	#else
 	Serial.print(*_K); Serial.print(F("\t"));
 	Serial.print(*(_K+1)); Serial.print(F("\t"));
 	Serial.print(*(_K+2)); Serial.print(F("\t"));
 	Serial.print(*(_K+3));
+	#endif
 #endif
 }
 //}
@@ -261,3 +288,4 @@ void vControllerState(int argc, char *argv[]) {
 //void vControllerLastState(int argc, char *argv[]);		// Gets the controller last state on terminal
 
 //} /* namespace controller */
+

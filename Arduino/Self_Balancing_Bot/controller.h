@@ -1,7 +1,7 @@
 /*
  * controller.h
  *
- *  Created on: 23 déc. 2015
+ *  Created on: 23 dÃ©c. 2015
  *      Author: rpantale
  */
 
@@ -108,3 +108,4 @@ void vControllerState(int argc, char *argv[]);			// Gets the controller state on
 //} /* namespace controller */
 
 #endif /* CONTROLLER_H_ */
+

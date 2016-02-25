@@ -1,7 +1,7 @@
 /*
  * math_comp.h
  *
- *  Created on: 10 déc. 2015
+ *  Created on: 10 dÃ©c. 2015
  *      Author: rpantale
  */
 
@@ -10,6 +10,12 @@
 
 #ifdef ARDUINO
 #include <Arduino.h>
+#endif
+
+//#define __BOARD_YUN__
+#ifdef __BOARD_YUN__
+#include <Bridge.h>
+#include <Console.h>
 #endif
 
 #define N_ROW		4		// State matrix row number
@@ -118,10 +124,17 @@ namespace math_comp {
 	template<class T, size_t size>
 	inline void _vector<T,size>::printv() {
 		for (int i = 0; i < size; i++) {
+#ifdef __BOARD_YUN__
+			Console.print(el[i]);
+			Console.print(F("\t"));
+		}
+		Console.println();
+#else
 			Serial.print(el[i]);
 			Serial.print("\t");
 		}
 		Serial.println();
+#endif
 	}
 
 	//
@@ -208,11 +221,19 @@ namespace math_comp {
 	inline void _matrix<T,N,M>::printm() {
 		for(int i = 0; i < N; i++) {
 			for(int j = 0; j < M; j++) {
+#ifdef __BOARD_YUN__
+				Console.print(el[i][j]);
+				Console.print("\t");
+			}
+			Console.println();
+		}
+#else
 				Serial.print(el[i][j]);
 				Serial.print("\t");
 			}
 			Serial.println();
 		}
+#endif
 	}
 	/*
 */
@@ -220,3 +241,4 @@ namespace math_comp {
 
 
 #endif /* MATH_COMP_H_ */
+

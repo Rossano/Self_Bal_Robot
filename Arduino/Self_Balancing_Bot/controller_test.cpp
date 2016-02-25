@@ -1,7 +1,7 @@
 /*
  * controller_test.cpp
  *
- *  Created on: 23 déc. 2015
+ *  Created on: 23 dÃ©c. 2015
  *      Author: rpantale
  */
 
@@ -10,3 +10,4 @@
 //namespace controller {
 
 //} /* namespace controller */
+

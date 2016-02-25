@@ -1,7 +1,7 @@
 /*
  * motor.h
  *
- *  Created on: 31 août 2015
+ *  Created on: 31 aoÃ»t 2015
  *      Author: Ross
  */
 
@@ -58,3 +58,4 @@ void vMotorTurn(int argc, char *argv[]); 		// Turn the Bot
 void vMotorMove(int argc, char *argv[]); 		// Move the Bot
 
 #endif /* MOTOR_H_ */
+

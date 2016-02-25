@@ -17,6 +17,8 @@
 //	My included file and headers
 #include <stddef.h>
 
+//#define __BOARD_YUN__
+
 //#include "controller.h"
 #include "motor.h"
 #if USE_PID
@@ -27,6 +29,11 @@
 #include "Self_Balancing_Bot.h"
 //	Shell own inclusion header
 #include "shell.h"
+
+#ifdef __BOARD_YUN__
+#include <Bridge.h>
+#include <Console.h>
+#endif
 
 cShell shell;
 
@@ -130,7 +137,11 @@ void cShell::ShellTask(void *p, char *line)
 		//	If there are too many arguments display an error
 		if (n > SHELL_MAX_ARGUMENTS)
 		{
+#ifdef __BOARD_YUN__
+			Console.println(F("Too many arguments"));
+#else
 			Serial.println (F("Too many arguments"));
+#endif
 			cmd = NULL;
 			break;
 		}
@@ -182,24 +193,40 @@ void cShell::ShellTask(void *p, char *line)
 		else if (strcasecmp(cmd, "help") == 0)
 		{
 			//	Help has no arguments
+#ifdef __BOARD_YUN__
+			Console.println(F("Entering help"));
+#else
 			Serial.println(F("Entering help"));
+#endif
 			if (n > 1)
 			{
 				vUsage("help");
 			}
+#ifdef __BOARD_YUN__
+			Console.println(F("Commands:"));
+			vListCommands(LocalCommands);
+			vListCommands(ShellCommand);
+			Console.println();
+#else
 			Serial.println(F("Commands:"));
 			//	Display the Local Commands
 			vListCommands(LocalCommands);
 			//	Display the Shell Commands
 			vListCommands(ShellCommand);
 			Serial.println();
+#endif
 		}
 		//	Try to Execute the other command, if it exits an error the command is not recognized
 		else if (vCmdExec(LocalCommands, cmd, n, args) && ((scp == NULL) || vCmdExec(/*scp*/ ShellCommand, cmd, n, args)))
 		{
+#ifdef __BOARD_YUN__
+			Console.print(F("Error: Command not recognized -> "));
+			Console.print(cmd);
+#else
 			Serial.print(F("Error: Command not recognized -> "));
 			Serial.print (cmd);
 			//Serial.println (" ???");
+#endif
 		}
 	}
 }
@@ -214,14 +241,24 @@ void cShell::vShellThread(void *p)
 	char line[SHELL_MAX_LINE_LENGTH];
 	// chRegSetThreadName("shell");
 
+#ifdef __BOARD_YUN__
+	Console.println("\r\nAVR Shell;");
+#else
 	Serial.println("\r\nAVR Shell;");
+#endif
 
 	while (!bEnd)
 	{
 		// Display the prompt
+#ifdef __BOARD_YUN__
+		Console.print(SHELL_PROMPT);
+		// Get the command line from stdin
+		gets(line);
+#else
 		Serial.print(SHELL_PROMPT);
 		// Get the command line from stdin
 		gets(line);
+#endif
 		// Calls the shell task
 		ShellTask(p, line);
 	}
@@ -265,7 +302,11 @@ void vCmdSystime(int argc, char *argv[])
 		return;
 	}
 	//	Else display a string stating that it is not implemented
+#ifdef __BOARD_YUN__
+	Console.println(F("Sys Time: Not implemented yet\r\n"));
+#else
 	Serial.println(F("Sys Time: Not implemented yet\r\nOK"));
+#endif
 }
 
 /// <summary>
@@ -285,10 +326,17 @@ void vCmdInfo(int argc, char *argv[])
 		return;
 	}
 	//	Else display Firmware and OS versions
+#ifdef __BOARD_YUN__
+	Console.print(F("Firmware: "));
+	Console.print(FW_VERSION);
+	Console.print(F("\r\nOS Version: "));
+	Console.print(OS_VERSION);	
+#else
 	Serial.print(F("Firmware: "));
 	Serial.print(FW_VERSION);
 	Serial.print(F("\r\nOS Version: "));
-	Serial.print(OS_VERSION);
+	Serial.print(OS_VERSION);	
+#endif
 	//Serial.println(F("\r\nOK\r\n"));
 }
 
@@ -301,7 +349,11 @@ void vListCommands(ShellCommand_t *scp)
 	//	Until the commands data structure has valid elements display the command name
 	while (scp->sc_name != NULL)
 	{
+#ifdef __BOARD_YUN__
+		Console.println((char *)scp->sc_name);
+#else
 		Serial.println((char *)scp->sc_name);
+#endif
 		scp++;
 	}
 }
@@ -313,8 +365,13 @@ void vListCommands(ShellCommand_t *scp)
 /// <param name="strc">Command usage string.</param>
 void vUsage(char *str)
 {
+#ifdef __BOARD_YUN__
+	Console.print(F("Error: Usage -> "));
+	Console.println(str);
+#else
 	Serial.print(F("Error: Usage-> "));
 	Serial.println(str);
+#endif
 }
 
 /// <summary>
@@ -354,7 +411,12 @@ void vSendACK(int argc, char *argv[])
 	else
 	{
 		//	Send the ACK
+#ifdef __BOARD_YUN__
+		Console.println(F("ACK\r\nOK"));
+#else
 		Serial.println(F("ACK\r\nOK"));
+#endif
 	}
 }
+
 
