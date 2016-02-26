@@ -25,7 +25,7 @@
 //namespace controller {
 
 #ifdef DEFINE_CONTROLLER_IN_LIB
-_controller controller(0,0,0,0);
+_controller controller(K1_DEFAULT, K2_DEFAULT, K3_DEFAULT, K4_DEFAULT);
 #endif
 // Enable/disable controller
 bool bEnableStateControl;
@@ -193,11 +193,15 @@ double * _controller::get_state() {
 void vControllerToggle(int argc, char *argv[]) {
 	if (argc != 1) {
 		vUsage("controller <0,1>");
+		Serial.print(F("State: "));
+		Serial.println(bEnableStateControl);		
 	}
 	else {
 		uint8_t val = atoi(argv[0]);
 		if (val) bEnableStateControl = true;
 		else bEnableStateControl = false;
+		Serial.print(F("arg: "));
+		Serial.println(val);
 	}
 }
 

@@ -165,9 +165,22 @@ void vMotorMove(int argc, char *argv[]) 		// Move the Bot
 {
 	if(argc != 1) {
 		vUsage("move <0=STOP 1=FORWARD 2=BACKWARD");
+#ifdef __BOARD_YUN__
+		Console.print(F("Move: "));
+		Console.println(motor.moveStatus);
+		Console.print(F("Turn: "));
+		Console.println(motor->turnStatus);
+#else
+		Serial.print(F("Move: "));
+		Serial.println(motor.moveStatus);
+		Serial.print(F("Turn: "));
+		Serial.println(motor.turnStatus);
+#endif
 	}
 	else {
 		uint8_t val = atoi(argv[0]);
+		Serial.print(F("arg: "));
+		Serial.println(val);
 		if(!val) {
 			motor.moveStatus = STOP;
 			motor.uiMotorA_Offset = 0;

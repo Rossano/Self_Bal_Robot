@@ -21,6 +21,10 @@
 //
 #define VECTOR_SIZE		4	// Size of the state space vector or state Matrix
 
+#define K1_DEFAULT		10000
+#define K2_DEFAULT		10000
+#define K3_DEFAULT		10000
+#define K4_DEFAULT		10000
 //namespace controller {
 
 //
