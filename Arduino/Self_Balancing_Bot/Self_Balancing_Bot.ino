@@ -49,7 +49,7 @@
 #endif
 
 //#define PROMPT		"CALLOGERO>"
-#define CMD_STRING_LEN	16
+#define CMD_STRING_LEN	32
 #define DECIMATION		100
 #define AXE_TO_USE		2
 //
@@ -215,29 +215,43 @@ void loop()
 	F = controller.calculate();
 
 	//compensation = pid.calculate(ypr[1] - 3.1415 / 2);
-	pwm = map(F, -1, 1, -255, 255);
+//	pwm = map(F, -1, 1, -255, 255);
+	pwm = map_double(F, -1, 1, -255, 255);
 
-	switch (eMotorMove) {
-		case FORWARD: pwm += MOVE_OFFSET;
-						break;
-		case BACKWARD: pwm = -MOVE_OFFSET + pwm;
-						break;
-		default: break;
-	};
-	switch (eMotorTurn) {
-		case LEFT: motor.move_A(pwm + TURN_OFFSET);
-					motor.move_B(pwm - TURN_OFFSET);
+	if (bEnableStateControl) {
+		
+		switch (eMotorMove) {
+				case FORWARD: pwm += MOVE_OFFSET;
+								break;
+				case BACKWARD: pwm = -MOVE_OFFSET + pwm;
+								break;
+				default: break;
+			};
+			/*
+			switch (eMotorTurn) {
+				case LEFT: motor.move_A(pwm + TURN_OFFSET);
+							motor.move_B(pwm - TURN_OFFSET);
+							break;
+				case RIGHT: motor.move_A(pwm - TURN_OFFSET);
+							motor.move_B(pwm + TURN_OFFSET);
+							break;
+				default: motor.move_A(pwm);
+					motor.move_B(pwm);
 					break;
-		case RIGHT: motor.move_A(pwm - TURN_OFFSET);
-					motor.move_B(pwm + TURN_OFFSET);
-					break;
-		default: motor.move_A(pwm);
+			};
+			*/
+			motor.move_A(pwm);
 			motor.move_B(pwm);
-			break;
-	};
-
-	//motor.move_A(comp);
-	//motor.move_B(comp);
+#ifdef STAND_ALONE
+			Serial.print(F("(PWM, F) = ")); 
+			Serial.print(pwm);
+			Serial.print(F(":"));
+			Serial.print(F);
+#endif
+			//motor.move_A(comp);
+			//motor.move_B(comp);
+	}
+	
 #endif
 
 	char ch;
@@ -391,3 +405,7 @@ void vGetValues(int argc, char *argv[]) { 		// Get the IMU and feedback values
 #endif
 }
 
+int map_double(double x, double in_min, double in_max, double out_min, double out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}

@@ -209,6 +209,7 @@ void vControllerToggle(int argc, char *argv[]) {
 void vControllerSet(int argc, char *argv[]) {
 	if(argc != 4) {
 		vUsage("contr_set <k1> <k2> <k3> <k4>");
+		Serial.println(argc);
 	}
 	else {
 		double k[VECTOR_SIZE];
