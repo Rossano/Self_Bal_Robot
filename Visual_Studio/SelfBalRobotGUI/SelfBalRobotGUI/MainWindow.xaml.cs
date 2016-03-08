@@ -32,13 +32,15 @@ namespace SelfBalRobotGUI
         #endregion
 
         #region Members
+        
         private System.Windows.Threading.DispatcherTimer readTimer;
         private TimeSpan _timerInterval;
         private SelfBalRobotGUI_Core _robot;
         private string readBuf;
         private bool isConnected;
-        private string portName = "COM4";
+        private string portName = "";
         private int baudRate = 57600;
+        
         #endregion
 
         #region Constructor
@@ -57,7 +59,8 @@ namespace SelfBalRobotGUI
             }
             //readTimer.Start();
             // Initialize variables
-            isConnected = false;            
+            isConnected = false;
+
         }
         
         #endregion
@@ -71,8 +74,10 @@ namespace SelfBalRobotGUI
                 portName = ComboBoxCOM.SelectedItem.ToString();
                 _robot = new SelfBalRobotGUI_Core(portName, baudRate);
                 isConnected = true;
-                System.Threading.Thread.Sleep(2000);
+                //System.Threading.Thread.Sleep(2000);
+                //  Empty buffer
                 string foo = _robot.getBuffer();
+                // Start reading timer
                 readTimer.Start();
             }
             catch (Exception ex)
@@ -80,6 +85,11 @@ namespace SelfBalRobotGUI
                 //throw ex;
                 errMessage(ex.Message);
             }
+            _robot.getControllerFeedback();
+            K1_Text.Text = _robot.K[0].ToString();
+            K2_Text.Text = _robot.K[1].ToString();
+            K3_Text.Text = _robot.K[2].ToString();
+            K4_Text.Text = _robot.K[3].ToString();
         }
 
         private void readTick(object sender, EventArgs e)
@@ -91,21 +101,66 @@ namespace SelfBalRobotGUI
                     requestIMUData();
 //                    Thread.Sleep(10);
                     readBuf = _robot.getBuffer();
-                    _robot.getControllerState();
-                    char[] separators = { ' ' };
+                    //_robot.getControllerState();
+                    if (string.IsNullOrEmpty(readBuf)) return;
+                    char[] separators = { ' ', ':', '\t', '\r', '\n' };
                     string[] tokens = readBuf.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                    YawAngle.Content = tokens[1];
-                    RollAngle.Content = tokens[2];
-                    PitchAngle.Content = tokens[3];
-                    GyroSpeed.Content = tokens[4];
-                    Theta.Content = _robot.K[0];
+                    int offs = 0;
+                    int i = 0;
+                    bool isFound = false;
+                    foreach (string s in tokens)
+                    {
+                        if (s.Equals("MPU"))
+                        {
+                            offs = i;
+                            isFound = true;
+                        }
+                        else i++;
+                    }
+                    if (!isFound) return;                  
+                    
+                    timeStamp.Content  = tokens[offs + 1];
+                    YawAngle.Content   = tokens[offs + 2];
+                    RollAngle.Content  = tokens[offs + 3];
+                    PitchAngle.Content = tokens[offs + 4];
+                    GyroSpeed.Content  = tokens[offs + 5];
+
+                    Force.Content    = tokens[offs + 6];
+                    PWMLeft.Content  = tokens[offs + 7];
+                    PWMRight.Content = tokens[offs + 7];
+
+                    _robot.getControllerState();
+                    
+                    Theta.Content    = _robot._state[0];
+                    ThetaDot.Content = _robot._state[1];
+                    X.Content        = _robot._state[2];
+                    Xdot.Content     = _robot._state[3];
+
+                    if (string.IsNullOrEmpty(readBuf)) return;
+                    //else if (!readBuf.StartsWith(("st"))) return;
+                    //isFound = false;
+                    //i = 0;
+                    //offs = 0;
+                    //tokens = readBuf.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                    //foreach (string s in tokens)
+                    //{
+                    //    if (s.Equals("state"))
+                    //    {
+                    //        offs = i;
+                    //        isFound = true;
+                    //    }
+                    //    else i++;
+                    //}
+                    //if (!isFound) return;
+                    Theta.Content    = _robot.K[0];
                     ThetaDot.Content = _robot.K[1];
-                    X.Content = _robot.K[2];
-                    Xdot.Content = _robot.K[3];
+                    X.Content        = _robot.K[2];
+                    Xdot.Content     = _robot.K[3];
+                    
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    errMessage(ex.Message);
                 }
             }
             else
@@ -138,6 +193,11 @@ namespace SelfBalRobotGUI
             {
                 errMessage(ex.Message);
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _robot.noturingRobot();
         }
 
         #endregion
@@ -178,6 +238,7 @@ namespace SelfBalRobotGUI
         }
 
         #endregion
+
 
     }
 }

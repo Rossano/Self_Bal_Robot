@@ -11,7 +11,10 @@
                 </StackPanel>
                 <Button x:Name="ConnectArduinoButto" Margin="5" Click="ConnectArduinoButto_Click" MaxWidth="80" Content="Connect"/>
                 <Separator />
-                <CheckBox x:Name="ControllerEnableCheckBox" Margin="5" HorizontalAlignment="Center" Click="ControllerEnableCheckBox_Click" Content="Abilita Controller"/>
+                <StackPanel Orientation="Horizontal" >
+                    <CheckBox x:Name="ControllerEnableCheckBox" Margin="5" HorizontalAlignment="Center" Click="ControllerEnableCheckBox_Click" Content="Abilita Controller"/>
+                    <Button Width="80" Click="Button_Click">Stop Motori</Button>
+                </StackPanel>                
                 <Separator/>
                 <Label HorizontalAlignment="Center" Content="Vettore Retroazione"/>
                 <StackPanel Orientation="Horizontal">
@@ -31,6 +34,10 @@
                     <TextBox x:Name="K4_Text" Width="70" HorizontalAlignment="Center" />
                 </StackPanel>
                 <Button HorizontalAlignment="Center" x:Name="ContrSet_Button" Margin="5" Width="80" Click="ContrSet_Button_Click" Content="Invia"/>
+                <StackPanel Margin="15" Orientation="Horizontal">
+                    <Label>Time Stamp: </Label>
+                    <Label Name="timeStamp" />
+                </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">

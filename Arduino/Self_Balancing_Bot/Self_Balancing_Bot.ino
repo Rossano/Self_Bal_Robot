@@ -52,6 +52,8 @@
 #define CMD_STRING_LEN	32
 #define DECIMATION		100
 #define AXE_TO_USE		2
+#undef STAND_ALONE
+#undef DEBUG
 //
 //	Global Data
 //
@@ -277,8 +279,9 @@ void loop()
 //		Serial.print(ypr[1] - 3.1415 / 2);
 //		Serial.print(pid.getError());
 //		Serial.println(compensation);
-		char **foo;
-		vGetValues(0, foo);
+
+//		char **foo;
+//		vGetValues(0, foo);
 		count = 0;
 	}
 }
@@ -364,6 +367,7 @@ void initialize_robot(void)
 
 void vGetValues(int argc, char *argv[]) { 		// Get the IMU and feedback values
 #ifdef __BOARD_YUN__
+	Console.print(F());
 	Console.print(millis());
 	Console.print(F(" "));
 #ifdef DEBUG
@@ -380,11 +384,14 @@ void vGetValues(int argc, char *argv[]) { 		// Get the IMU and feedback values
 #endif
 	Console.print(gyro[AXE_TO_USE]);
 	Console.print(F(" "));
-	Console.println(F);
+	Console.print(F);
+	Console.print(F(" "));
+	Console.println(pwm);
 #else
 	//
 	//	Non Yun Output
 	//
+	Serial.print(F("MPU:"));
 	Serial.print(millis());
 	Serial.print(F(" "));
 #ifdef DEBUG
@@ -396,12 +403,19 @@ void vGetValues(int argc, char *argv[]) { 		// Get the IMU and feedback values
 	Serial.print(F(" "));
 	//Serial.print(pid.getError());
 #else
-	Serial.print(ypr[AXE_TO_USE]/3.1415*180);
+	//Serial.print(ypr[AXE_TO_USE]/3.1415*180);
+	Serial.print(ypr[0]/3.1415*180);
+	Serial.print(F(" "));
+	Serial.print(ypr[1]/3.1415*180);
+	Serial.print(F(" "));
+	Serial.print(ypr[2]/3.1415*180);
 	Serial.print(F(" "));
 #endif
 	Serial.print(gyro[AXE_TO_USE]);
 	Serial.print(F(" "));
-	Serial.println(F);
+	Serial.print(F);
+	Serial.print(F(" "));
+	Serial.println(pwm);
 #endif
 }
 

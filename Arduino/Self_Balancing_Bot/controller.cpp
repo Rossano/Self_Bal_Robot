@@ -192,7 +192,7 @@ double * _controller::get_state() {
 // Controller Toggle ON/OFF
 void vControllerToggle(int argc, char *argv[]) {
 	if (argc != 1) {
-		vUsage("controller <0,1>");
+		vUsage("cont_toggle <0,1>");
 		Serial.print(F("State: "));
 		Serial.println(bEnableStateControl);		
 	}
@@ -200,8 +200,8 @@ void vControllerToggle(int argc, char *argv[]) {
 		uint8_t val = atoi(argv[0]);
 		if (val) bEnableStateControl = true;
 		else bEnableStateControl = false;
-		Serial.print(F("arg: "));
-		Serial.println(val);
+		//Serial.print(F("arg: "));
+		//Serial.println(val);
 	}
 }
 
@@ -245,6 +245,7 @@ void vControllerGet(int argc, char *argv[]) {
 	Console.print(_K[2]); Console.print(F("\t"));
 	Console.println(_K[3]);
 #else
+	Serial.print("cont: ");
 	Serial.print(_K[0]); Serial.print(F("\t"));
 	Serial.print(_K[1]); Serial.print(F("\t"));
 	Serial.print(_K[2]); Serial.print(F("\t"));
@@ -268,6 +269,7 @@ void vControllerState(int argc, char *argv[]) {
 	Console.print(_K[2]); Console.print(F("\t"));
 	Console.println(_K[3]);
 	#else
+	Serial.print("state ");
 	Serial.print(_K[0]); Serial.print(F("\t"));
 	Serial.print(_K[1]); Serial.print(F("\t"));
 	Serial.print(_K[2]); Serial.print(F("\t"));

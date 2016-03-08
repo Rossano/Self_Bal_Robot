@@ -244,11 +244,11 @@ void imu_read()
 #ifdef __BOARD_YUN__
 				Console.println(F("\nLOCKED\n"));
 				dmpReady = false;
-				Console.println(F("MPU is stalled, reinitializing..."));
+				Console.println(F("DMP is stalled, reinitializing..."));
 #else
 				Serial.println(F("\nLOCKED\n"));
 				dmpReady = false;
-				Serial.println(F("MPU stalled, reinitializing..."));
+				Serial.println(F("DMP stalled, reinitializing..."));
 #endif
 				mpu.reset();
 				if ((devStatus = mpu.dmpInitialize()) == 0)
