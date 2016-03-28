@@ -28,6 +28,7 @@ namespace SelfBalRobotGUI
         const string request_feedback = "get_fb";
         const string request_info = "info";
         const string set_fb_coeff = "set_coeff";
+        const int ReadInterval = 100;
         
         #endregion
 
@@ -40,6 +41,9 @@ namespace SelfBalRobotGUI
         private bool isConnected;
         private string portName = "";
         private int baudRate = 57600;
+        private int _motorPwm = 0;
+        private bool _motorON = false;
+        private bool _motorDir = true;
         
         #endregion
 
@@ -51,7 +55,7 @@ namespace SelfBalRobotGUI
             // Initialize timer
             readTimer = new System.Windows.Threading.DispatcherTimer();
             readTimer.Tick += readTick;
-            _timerInterval = new TimeSpan(0, 0, 0, 0, 500);
+            _timerInterval = new TimeSpan(0, 0, 0, 0, ReadInterval);
             readTimer.Interval = _timerInterval;
             foreach(string s in System.IO.Ports.SerialPort.GetPortNames())
             {
@@ -76,20 +80,31 @@ namespace SelfBalRobotGUI
                 isConnected = true;
                 //System.Threading.Thread.Sleep(2000);
                 //  Empty buffer
+                //Thread.Sleep(1000);
+                int k1 = 10000;
+                int k2 = 1000;
+                int k3 = 0;
+                int k4 = 0;
+                _robot.setControllerFeedback(k1, k2, k3, k4);
+                K1_Text.Text = k1.ToString();
+                K2_Text.Text = k2.ToString();
+                K3_Text.Text = k3.ToString();
+                K4_Text.Text = k4.ToString();
                 string foo = _robot.getBuffer();
                 // Start reading timer
                 readTimer.Start();
+                _robot.getControllerFeedback();
+                K1_Text.Text = _robot.K[0].ToString();
+                K2_Text.Text = _robot.K[1].ToString();
+                K3_Text.Text = _robot.K[2].ToString();
+                K4_Text.Text = _robot.K[3].ToString();
             }
             catch (Exception ex)
             {
                 //throw ex;
                 errMessage(ex.Message);
             }
-            _robot.getControllerFeedback();
-            K1_Text.Text = _robot.K[0].ToString();
-            K2_Text.Text = _robot.K[1].ToString();
-            K3_Text.Text = _robot.K[2].ToString();
-            K4_Text.Text = _robot.K[3].ToString();
+           
         }
 
         private void readTick(object sender, EventArgs e)
@@ -152,10 +167,15 @@ namespace SelfBalRobotGUI
                     //    else i++;
                     //}
                     //if (!isFound) return;
+
+                    /*
                     Theta.Content    = _robot.K[0];
                     ThetaDot.Content = _robot.K[1];
                     X.Content        = _robot.K[2];
-                    Xdot.Content     = _robot.K[3];
+                    Xdot.Content     = _robot.K[3];*/
+
+                    // Estimate the Force
+                    EstForce.Content = _robot.K[0] * _robot._state[0] + _robot.K[1] * _robot._state[1] + _robot.K[2] * _robot._state[2] + _robot.K[3] * _robot._state[3];
                     
                 }
                 catch (Exception ex)
@@ -197,7 +217,7 @@ namespace SelfBalRobotGUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _robot.noturingRobot();
+            _robot.stopRobot();
         }
 
         #endregion
@@ -239,6 +259,66 @@ namespace SelfBalRobotGUI
 
         #endregion
 
+        private void PWMMotorSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var slider = sender as Slider;
+            _motorPwm = Convert.ToInt16(slider.Value);
+            if (!_motorON) return;
+            if(_motorDir)
+            {
+                _robot.moveRobot(SelfBalRobotGUI_Core.moveRobot_type._FORWARD, _motorPwm);
+            }
+            else
+            {
+                _robot.moveRobot(SelfBalRobotGUI_Core.moveRobot_type._BACKWARD, _motorPwm);
+            }
+        }
+
+        private void MotorOnRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var button = sender as RadioButton;
+            if ((bool)button.IsChecked)
+            {
+                _motorON = true;
+
+                if (_motorDir)
+                {
+                    _robot.moveRobot(SelfBalRobotGUI_Core.moveRobot_type._FORWARD, _motorPwm);
+                }
+                else
+                {
+                    _robot.moveRobot(SelfBalRobotGUI_Core.moveRobot_type._BACKWARD, _motorPwm);
+                }
+                
+            }
+            else
+            {
+                _motorON = false;
+                _robot.stopRobot();
+            }
+        }
+
+        private void MotorOffRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_robot == null) return;
+            var button = sender as RadioButton;
+            if((bool)button.IsChecked)
+            {
+                _motorON = false;
+
+                _robot.stopRobot();
+            }
+        }
+
+        private void MotorForwardRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MotorBackwardRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
 
     }
 }

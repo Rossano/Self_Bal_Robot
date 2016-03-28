@@ -170,6 +170,7 @@ double _controller::calculate() {
 
 #ifdef USE_STATE_VECTOR
 	Fout = state * K;
+	//for (size_t i; i<VECTOR_SIZE; i++) Fout += state[i]*K[i];
 #else
 	for (size_t i; i<VECTOR_SIZE; i++) Fout += state[i]*K[i];
 #endif

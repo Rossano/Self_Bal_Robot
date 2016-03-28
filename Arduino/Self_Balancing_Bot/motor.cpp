@@ -163,7 +163,7 @@ void vMotorTurn(int argc, char *argv[]) 		// Turn the Bot
 
 void vMotorMove(int argc, char *argv[]) 		// Move the Bot
 {
-	if(argc != 1) {
+	if(argc != 2) {
 		vUsage("move <0=STOP 1=FORWARD 2=BACKWARD");
 #ifdef __BOARD_YUN__
 		Console.print(F("Move: "));
@@ -179,6 +179,7 @@ void vMotorMove(int argc, char *argv[]) 		// Move the Bot
 	}
 	else {
 		uint8_t val = atoi(argv[0]);
+		uint8_t pwm = atoi(argv[1]);
 		Serial.print(F("arg: "));
 		Serial.println(val);
 		if(!val) {
@@ -198,6 +199,8 @@ void vMotorMove(int argc, char *argv[]) 		// Move the Bot
 				motor.uiMotorB_Offset -= MOTOR_OFFSET;
 			}
 		}
+		motor.move_A(pwm);
+		motor.move_B(pwm);
 	}
 }
 

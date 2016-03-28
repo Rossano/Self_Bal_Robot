@@ -218,7 +218,7 @@ void loop()
 
 	//compensation = pid.calculate(ypr[1] - 3.1415 / 2);
 //	pwm = map(F, -1, 1, -255, 255);
-	pwm = map_double(F, -1, 1, -255, 255);
+	pwm = map_double(F, -10000, 10000, -255, 255);
 
 	if (bEnableStateControl) {
 		

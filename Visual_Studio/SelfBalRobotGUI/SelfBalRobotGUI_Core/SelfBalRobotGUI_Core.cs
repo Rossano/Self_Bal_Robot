@@ -23,6 +23,7 @@ namespace Arduino
         }*/
     };
 
+    [System.Runtime.InteropServices.GuidAttribute("B9BED6C8-5BBF-4A1F-BCF9-DE05313697C2")]
     public class SelfBalRobotGUI_Core: MyArduino
     {		
 
@@ -82,6 +83,18 @@ namespace Arduino
             _controllerActive=false;
             _state = new float[VECTOR_LENGHT];
             K = new float[VECTOR_LENGHT];
+            for (int i = 0; i < VECTOR_LENGHT; i++)
+            {
+                K[i] = 0.0F;
+            }
+
+            System.Threading.Thread.Sleep(3000);
+            // Empty Buffer with MP6050 messages
+            Queue<string> foo = getFIFOBuffer();
+            for (int i = 0; i < foo.Count; i++)
+            {
+                Console.WriteLine(foo.Dequeue());
+            }
         }
 
         #endregion
@@ -101,8 +114,21 @@ namespace Arduino
             try
             {
                 arduinoWrite(request_data);
-                string foo = getBuffer();
-                char[] separators = { ' ', ',' };
+                //string foo = getBuffer();
+                System.Threading.Thread.Sleep(100);
+                string foo;
+                Queue<string> buff=getFIFOBuffer();
+                bool found = false;
+                int count = buff.Count;
+                int j = 0;
+                do
+                {
+                    foo = buff.Dequeue();
+                    if (foo.StartsWith(get_val_Id)) found = true;
+                    else buff.Enqueue(foo);
+                } while (!found && ++j < count);
+                if (string.IsNullOrEmpty(foo) || !found) return;
+                char[] separators = { ' ', ',', ':' };
                 string[] tokens = foo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                 timeStamp = Convert.ToInt64(tokens[0]);
                 for (int i = 0; i < 2; i++)
@@ -123,12 +149,28 @@ namespace Arduino
             try
             {
                 arduinoWrite(request_feedback);
-                string foo = getBuffer();
-                char[] separators = { ' ', ',' };
-                string[] tokens = foo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                for(int i=0;i<VECTOR_LENGHT;i++)
+                System.Threading.Thread.Sleep(100);
+                Queue<string> buff = getFIFOBuffer();
+                bool found = false;
+                int count = buff.Count;
+                if (count == 0) return;
+                string foo = "";
+                do
                 {
-                    _state[i] = (float)Convert.ToDouble(tokens[i]);
+                    foo = buff.Dequeue();
+                    if (foo.Contains(cont_state_Id)) found = true;
+                    else buff.Enqueue(foo);
+                } while (!found && --count >= 0);
+                //string foo = getBuffer();
+                if (string.IsNullOrEmpty(foo) || !found) return;
+                char[] separators = { ' ', ',', '\t', '\r', '\n' };
+                string[] tokens = foo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                //if (!tokens[0].StartsWith(cont_state_Id)) return;
+                int offs = 0;
+                while (!tokens[offs].StartsWith(cont_state_Id)) offs++;
+                for (int i = 0; i < VECTOR_LENGHT; i++)
+                {
+                    _state[i] = (float)Convert.ToDouble(tokens[offs + i + 1]);
                 }
             }
             catch(Exception ex)
@@ -141,6 +183,10 @@ namespace Arduino
         {
             try
             {
+                K[0] = (float)k1;
+                K[1] = (float)k2;
+                K[2] = (float)k3;
+                K[3] = (float)k4;
                 string cmd = set_fb_coeff + " " + k1.ToString() + " " + k2.ToString() + " " + k3.ToString() + " " + k4.ToString();
                 arduinoWrite(cmd);
             }
@@ -155,13 +201,28 @@ namespace Arduino
             try
             {
                 arduinoWrite(get_fb_coeff);
-                string foo=getBuffer();
-                char[] separators = { ' ', ',' };
-                string[] tokens = foo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                int i = 0;
-                foreach(string s in tokens)
+                System.Threading.Thread.Sleep(100);
+                Queue<string> buff = getFIFOBuffer();
+                string foo;
+                int count = buff.Count;
+                bool found = false;
+                do
                 {
-                    K[i] = (float)Convert.ToDouble(s);
+                    foo = buff.Dequeue();
+                    if (foo.StartsWith(cont_get_Id)) found = true;
+                    else buff.Enqueue(foo);
+                } while (!found && --count >= 0);
+                //string foo=getBuffer();
+                //if (string.IsNullOrEmpty(foo)) return;
+                if (count < 0) return;
+                char[] separators = { ' ', ',', '\t', '\r', '\n' };
+                string[] tokens = foo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                //int i = 0;
+                //foreach(string s in tokens)
+                if (tokens[0].Contains("Error")) throw new Exception(foo);
+                for (int i = 0; i < 4; i++ )
+                {
+                    K[i] = (float)Convert.ToDouble(tokens[i + 1]);
                 }
             }
             catch(Exception ex)
@@ -174,8 +235,17 @@ namespace Arduino
         {
             try
             {
-                _controllerActive = active;
-                arduinoWrite(toggle_controller);
+                
+                if (active)
+                {
+	                _controllerActive = active;
+                    arduinoWrite(toggle_controller + " 1");
+                }
+                else
+                {
+                    _controllerActive = active;                    arduinoWrite(toggle_controller + " 0");
+
+                }
             }
             catch(Exception ex)
             {
@@ -206,7 +276,7 @@ namespace Arduino
         {
             try
             {
-                arduinoWrite(move_robot + " " + STOP);
+                arduinoWrite(move_robot + " " + STOP + " 0");
             }
             catch(Exception ex)
             {
@@ -214,7 +284,7 @@ namespace Arduino
             }
         }
 
-        public void moveRobot(moveRobot_type dir)
+        public void moveRobot(moveRobot_type dir, int pwm)
         {
             try
             {
@@ -222,7 +292,7 @@ namespace Arduino
                 if (dir == moveRobot_type._STOP) return;
                 else if (dir == moveRobot_type._FORWARD) i = FORWARD;
                 else i = BACKWARD;
-                arduinoWrite(move_robot + " " + i.ToString());
+                arduinoWrite(move_robot + " " + i.ToString() + " " + pwm.ToString());
             }
             catch(Exception ex)
             {
