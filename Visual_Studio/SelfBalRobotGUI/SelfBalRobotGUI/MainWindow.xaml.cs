@@ -28,7 +28,7 @@ namespace SelfBalRobotGUI
         const string request_feedback = "get_fb";
         const string request_info = "info";
         const string set_fb_coeff = "set_coeff";
-        const int ReadInterval = 100;
+        const int ReadInterval = 500;
         
         #endregion
 
@@ -81,10 +81,10 @@ namespace SelfBalRobotGUI
                 //System.Threading.Thread.Sleep(2000);
                 //  Empty buffer
                 //Thread.Sleep(1000);
-                int k1 = 10000;
-                int k2 = 1000;
-                int k3 = 0;
-                int k4 = 0;
+                int k1 = -1560;
+                int k2 = -270;
+                int k3 = -480;
+                int k4 = -90;
                 _robot.setControllerFeedback(k1, k2, k3, k4);
                 K1_Text.Text = k1.ToString();
                 K2_Text.Text = k2.ToString();
@@ -102,7 +102,7 @@ namespace SelfBalRobotGUI
             catch (Exception ex)
             {
                 //throw ex;
-                errMessage(ex.Message);
+                errMessage(ex.Message);                
             }
            
         }
@@ -180,7 +180,14 @@ namespace SelfBalRobotGUI
                 }
                 catch (Exception ex)
                 {
-                    errMessage(ex.Message);
+                    //errMessage(ex.Message);
+                    if (isConnected)
+                    {
+                        MessageBox.Show("Connessione Persa, il programma verrà chiuso", "Info", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        isConnected = false;
+                        readTimer.Stop();
+
+                    }
                 }
             }
             else
@@ -318,6 +325,11 @@ namespace SelfBalRobotGUI
         private void MotorBackwardRadioButton_Checked(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            System.Environment.Exit(0);
         }
 
     }

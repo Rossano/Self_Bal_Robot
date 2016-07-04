@@ -1,11 +1,18 @@
-#include <I2Cdev.h>
+//#include <MPU6050_9Axis_MotionApps41.h>
+#include <MPU6050.h>
+#include <helper_3dmath_OLD.h>
+//#include <MPU6050_9Axis_MotionApps41.h>
+//#include <MPU6050.h>
+//#include <helper_3dmath_OLD.h>
+//
+//#include <I2Cdev.h>
  
 /*#include <MPU6050.h>
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <helper_3dmath.h>
 */
 // Do not remove the include below
-#include "Self_Balancing_Bot.h"
+//#include "Self_Balancing_Bot.h"
 #include <Arduino.h>
 
 #include <Wire.h>
@@ -16,7 +23,7 @@
 #undef USE_NILRTOS
 
 //#include <helper_3dmath.h>
-//#include <MPU6050.h>
+#include <MPU6050.h>
 //#include <MPU6050_6Axis_MotionApps20.h>
 
 //#include <MPU6050.h>
@@ -35,11 +42,16 @@
 #include "pid.h"
 #include "controller.h"
 #include "motor.h"
-#include "shell.h"
+//#include "shell.h"
 
-#ifdef __BOARD_YUN__
+//#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN
 #include <Bridge.h>
 #include <Console.h>
+#else ifdef ARDUINO_AVR_LEONARDO
+#include "shell.h"
+#else
+#error "Unreconized ARDUINO BOARD"
 #endif
 
 #ifdef USE_NILRTOS
@@ -161,7 +173,7 @@ NIL_THREADS_TABLE_END()
 void setup()
 {
 // Add your initialization code here
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 	Bridge.begin();
 	Console.begin();
 	while(!Console){
@@ -190,7 +202,7 @@ void setup()
 	isConnected = true;
 	bEnableStateControl = true;
 	controller.set_feedback_vector(K1_DEFAULT, K2_DEFAULT, K3_DEFAULT, K4_DEFAULT);
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 	Console.print(SHELL_PROMPT);
 #else
 	Serial.print(SHELL_PROMPT);
@@ -266,7 +278,7 @@ void loop()
 		char *buf = (char *)&buffer;
 		cmdString.toCharArray(buf, CMD_STRING_LEN);
 		shell.ShellTask((void *)ShellCommand, buf);
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 		Console.print(SHELL_PROMPT);
 #else
 		Serial.print(SHELL_PROMPT);
@@ -298,7 +310,7 @@ void CDC_Task()
 	//	Until data are available from the Serial Port read the data and store it into the input buffer cmdString
 	//	Process ends if '\n' is received or the MAX input string length is reached
 	//
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 	while(Console.available()) {
 		//	If '\n" is received or MAX string lenght is reached set the cmdReady flag
 		if (++inBufCount == CMD_STRING_LEN) ch = '\n';
@@ -350,7 +362,7 @@ void initialize_robot(void)
 	pinMode(IRQ_PORT, INPUT);
 	digitalWrite(IRQ_PORT, HIGH);
 	attachInterrupt(DMP_IRQ, imu_isr, CHANGE);
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 	Console.print(F("IRQ on pin: D"));
 	Console.println(IRQ_PORT);
 #else
@@ -369,8 +381,8 @@ void initialize_robot(void)
 }
 
 void vGetValues(int argc, char *argv[]) { 		// Get the IMU and feedback values
-#ifdef __BOARD_YUN__
-	Console.print(F());
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
+	Console.print(F(""));
 	Console.print(millis());
 	Console.print(F(" "));
 #ifdef DEBUG
