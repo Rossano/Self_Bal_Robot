@@ -47,12 +47,20 @@
 //#ifdef __BOARD_YUN__
 #ifdef ARDUINO_AVR_YUN
 #include <Bridge.h>
-#include <Console.h>
-#else ifdef ARDUINO_AVR_LEONARDO
+//#include <Console.h>
+//#include <BridgeServer.h>
+//#include <BridgeClient.h>
+#include <YunServer.h>
+#include <YunClient.h>
+#include "server.h"
+//#else 
+if defined ARDUINO_AVR_LEONARDO
 #include "shell.h"
-#else
-#error "Unreconized ARDUINO BOARD"
 #endif
+//#endif
+//#else
+//#error "Unreconized ARDUINO BOARD"
+//#endif
 
 #ifdef USE_NILRTOS
 #include <NilTimer1.h>
@@ -85,14 +93,24 @@ int pwm = 0;
 //bool blinkState = false;
 //_motor motor;
 //_pid pid;
+#ifdef ARDUINO_AVR_YUN
+//BridgeServer server;
+YunServer server;
+//#else 
+#if defined ARDUINO_AVR_LEONARDO
 extern cShell shell;
+#endif
 
 //extern static ShellCommand_t ShellCommand[];
 
 //
 //	Function protorypes
 //
+#ifdef ARDUINO_AVR_YUN
+void serverTask(YunClient);
+#if defined ARDUINO_ARCH_LEONARDO
 void CDC_Task();
+#endif
 void initialize_robot();
 
 #ifdef USE_NILRTOS
@@ -175,13 +193,18 @@ void setup()
 // Add your initialization code here
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 	Bridge.begin();
-	Console.begin();
-	while(!Console){
+	// Listen for incoming connection only from localhost
+	// noone from external network will connect
+	server.listenOnLocalhost();
+	server.begin();
+	//Console.begin();
+/*	while(!server)
+	{
 	    digitalWrite(13, HIGH);
 	    delay(300);
 	    digitalWrite(13, LOW);
 	    delay(300);
-	}
+	} */
 #else
 	int count = 100;
 	Serial.begin(BAUDRATE);
@@ -203,7 +226,7 @@ void setup()
 	bEnableStateControl = true;
 	controller.set_feedback_vector(K1_DEFAULT, K2_DEFAULT, K3_DEFAULT, K4_DEFAULT);
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-	Console.print(SHELL_PROMPT);
+//	Console.print(SHELL_PROMPT);
 #else
 	Serial.print(SHELL_PROMPT);
 #endif
@@ -270,6 +293,14 @@ void loop()
 	
 #endif
 
+#ifdef ARDUINO_AVR_YUN
+	YunClient client = server.accept();
+	if (client)
+	{
+		serverTask(client);
+	}
+	client.stop();
+#else if defined ARDUINO_AVR_LEONARDO
 	char ch;
 	CDC_Task();
 	if(cmdReady)
@@ -279,7 +310,7 @@ void loop()
 		cmdString.toCharArray(buf, CMD_STRING_LEN);
 		shell.ShellTask((void *)ShellCommand, buf);
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-		Console.print(SHELL_PROMPT);
+//		Console.print(SHELL_PROMPT);
 #else
 		Serial.print(SHELL_PROMPT);
 #endif
@@ -298,8 +329,18 @@ void loop()
 //		vGetValues(0, foo);
 		count = 0;
 	}
+#endif
 }
 
+#ifdef ARDUINO_AVR_YUN
+//
+//	YUN Server Task manager
+//
+void Server_Task()
+{
+	
+}
+#else if defined ARDUINO_AVR_LEONARDO
 //
 //	USB-CDC Task
 //
@@ -332,6 +373,7 @@ void CDC_Task()
 	}
 #endif
 }
+#endif
 
 void initialize_robot(void)
 {
