@@ -54,13 +54,13 @@
 #include <YunClient.h>
 #include "server.h"
 //#else 
-if defined ARDUINO_AVR_LEONARDO
+#if defined ARDUINO_AVR_LEONARDO
 #include "shell.h"
 #endif
 //#endif
-//#else
-//#error "Unreconized ARDUINO BOARD"
-//#endif
+#else
+#error "Unreconized ARDUINO BOARD"
+#endif
 
 #ifdef USE_NILRTOS
 #include <NilTimer1.h>
@@ -95,10 +95,11 @@ int pwm = 0;
 //_pid pid;
 #ifdef ARDUINO_AVR_YUN
 //BridgeServer server;
-YunServer server;
+extern YunServer server;
 //#else 
 #if defined ARDUINO_AVR_LEONARDO
 extern cShell shell;
+#endif
 #endif
 
 //extern static ShellCommand_t ShellCommand[];
@@ -110,6 +111,7 @@ extern cShell shell;
 void serverTask(YunClient);
 #if defined ARDUINO_ARCH_LEONARDO
 void CDC_Task();
+#endif
 #endif
 void initialize_robot();
 
@@ -309,11 +311,13 @@ void loop()
 		char *buf = (char *)&buffer;
 		cmdString.toCharArray(buf, CMD_STRING_LEN);
 		shell.ShellTask((void *)ShellCommand, buf);
-#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
+//#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 //		Console.print(SHELL_PROMPT);
-#else
+//#endif
+//#else
+//		Serial.print(SHELL_PROMPT);
+//#endif
 		Serial.print(SHELL_PROMPT);
-#endif
 		cmdString = "";
 		cmdReady = false;
 		inBufCount = 0;
@@ -351,7 +355,7 @@ void CDC_Task()
 	//	Until data are available from the Serial Port read the data and store it into the input buffer cmdString
 	//	Process ends if '\n' is received or the MAX input string length is reached
 	//
-#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
+//#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 	while(Console.available()) {
 		//	If '\n" is received or MAX string lenght is reached set the cmdReady flag
 		if (++inBufCount == CMD_STRING_LEN) ch = '\n';
@@ -361,7 +365,7 @@ void CDC_Task()
 		}
 		if (ch == '\n') cmdReady = true;
 	}
-#else
+//#else
 	while(Serial.available()) {
 		//	If '\n" is received or MAX string lenght is reached set the cmdReady flag
 		if (++inBufCount == CMD_STRING_LEN) ch = '\n';
@@ -371,7 +375,7 @@ void CDC_Task()
 		}
 		if (ch == '\n') cmdReady = true;
 	}
-#endif
+//#endif
 }
 #endif
 
@@ -405,8 +409,8 @@ void initialize_robot(void)
 	digitalWrite(IRQ_PORT, HIGH);
 	attachInterrupt(DMP_IRQ, imu_isr, CHANGE);
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-	Console.print(F("IRQ on pin: D"));
-	Console.println(IRQ_PORT);
+	//Console.print(F("IRQ on pin: D"));
+	//Console.println(IRQ_PORT);
 #else
 	Serial.print(F("IRQ on pin: D"));
 	Serial.println(IRQ_PORT);

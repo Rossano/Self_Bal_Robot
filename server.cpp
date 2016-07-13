@@ -11,6 +11,7 @@
 #include "server.h"
 #include "controller.h"
 #include "motor.h"
+#include <stdlib.h>
 
 YunServer server;
 
@@ -19,7 +20,7 @@ void serverTask(YunClient client)
 	String cmd = client.readStringUntil('/');
 	if (cmd == CONTROLLER_CMD)
 	{
-		String foo = cmd.readStringUntil('/');
+		String foo = client.readStringUntil('/');
 		if (foo == "get")
 		{
 			double * k = controller.get_feedback_elements();
@@ -27,19 +28,23 @@ void serverTask(YunClient client)
 		}
 		else if (foo == "on")
 		{
-			bEnableControl = true;
+			bEnableStateControl = true;
 		}
 		else if (foo == "off")
 		{
-			bEnableControl = false;
+			bEnableStateControl = false;
 		}
 		else if (foo == "set")
 		{
 			double k[VECTOR_SIZE];
 			for (int i=0; i<VECTOR_SIZE; i++)
 			{
-				String str = foo.readStringUntil(',');
-				k[i] = parseFloat(str);
+				String str = client.readStringUntil(',');							
+				int len = str.length() + 1;
+				char ciccio [len + 1];
+								
+				str.toCharArray(ciccio, len);
+		/*		k[i] = atof(ciccio); //parseFloat(str);*/
 			}
 			controller.set_feedback_vector(math_comp::_vector<double, VECTOR_SIZE>(k));
 		}
@@ -53,10 +58,10 @@ void serverTask(YunClient client)
 	}
 	else if (cmd == MOTOR_CMD)
 	{
-		String foo = cmd.readStringUntil('/');
+		String foo = client.readStringUntil('/');
 		if (foo == MOVE_CMD)
 		{
-			foo = foo.readStringUntil('/');
+			foo = client.readStringUntil('/');
 			if (foo == MOVE_FWD_CMD)
 			{
 				motor.moveStatus = FORWARD;
@@ -84,7 +89,7 @@ void serverTask(YunClient client)
 		}
 		else if (foo == TURN_CMD)
 		{
-			foo = foo.readStringUntil('/');
+			foo = client.readStringUntil('/');
 			if (foo == TURN_LEFT_CMD)
 			{
 				motor.turnStatus = LEFT;
@@ -97,7 +102,7 @@ void serverTask(YunClient client)
 			}
 			else if (foo == NO_TURN_CMD)
 			{
-				motor.moveStatus = NO_TURN;
+				motor.turnStatus = NO_TURN;
 				motor.uiMotorB_Offset = motor.uiMotorA_Offset = 0;
 			}
 			else
