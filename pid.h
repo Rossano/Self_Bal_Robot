@@ -34,9 +34,12 @@ extern bool bEnableControl;
 //
 //	Function Prototype
 //
+#if BOARD==ARDUINO_AVR_LEONARDO
 void vpidToggle(int argc, char *argv[]); 		// Toggle the PID ON & OFF
 void vpidSet(int argc, char *argv[]); 			// Set the PID coeff
 void vpidGet(int argc, char *argv[]); 			// Get the PID coeff
 void vpidGetError(int argc, char *argv[]); 		// Get the PID error
+#endif
+
 #endif /* PID_H_ */
 

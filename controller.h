@@ -103,12 +103,14 @@ math_comp::_matrix<double, VECTOR_SIZE, VECTOR_SIZE>;
 //
 //	Function prototypes
 //
+#ifdef ARDUINO_AVR_LEONARDO
 void vControllerToggle(int argc, char *argv[]); 		// Controller Toggle ON/OFF
 void vControllerSet(int argc, char *argv[]);			// Sets feedback coefficients
 void vControllerGet(int argc, char *argv[]);			// Gets feedback coefficient on terminal
 void vControllerState(int argc, char *argv[]);			// Gets the controller state on the terminal
 //void vControllerError(int argc, char *argv[]);			// Gets the controller error on terminal
 //void vControllerLastState(int argc, char *argv[]);		// Gets the controller last state on terminal
+#endif
 
 //} /* namespace controller */
 

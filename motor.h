@@ -54,8 +54,10 @@ extern _motor motor;
 //
 //	Function Prototypes
 //
+#if BOARD==ARDUINO_AVR_LEONARDO
 void vMotorTurn(int argc, char *argv[]); 		// Turn the Bot
 void vMotorMove(int argc, char *argv[]); 		// Move the Bot
+#endif
 
 #endif /* MOTOR_H_ */
 

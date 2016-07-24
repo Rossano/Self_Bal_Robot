@@ -13,7 +13,7 @@
 
 #ifdef __BOARD_YUN__
 #include <Bridge.h>
-#include <Console.h>
+//#include <Console.h>
 #endif
 
 _pid pid;
@@ -96,7 +96,7 @@ void vpidSet(int argc, char *argv[]) 			// Set the PID coeff
 		pid.set_coefficients(val1, val2, val3);
 		// Send an ACK();
 #ifdef __BOARD_YUN__
-		Console.println("\r\nOK");
+		//Console.println("\r\nOK");
 #else
 		Serial.println("\r\nOK");
 #endif
@@ -110,7 +110,7 @@ void vpidGet(int argc, char *argv[]) 			// Get the PID coeff
 	pid.get_coefficients(Kp, Kd, Ki);
 
 #ifdef __BOARD_YUN__
-	Console.print("PID coefficients [Kp, Kd, Ki]: ");
+	/*Console.print("PID coefficients [Kp, Kd, Ki]: ");
 	Console.print(Kp);
 	Console.print("\t");
 	Console.print(Kd);
@@ -118,7 +118,7 @@ void vpidGet(int argc, char *argv[]) 			// Get the PID coeff
 	Console.println(Ki);
 
 	// Send an ACK();
-	Console.println("\r\nOK");
+	Console.println("\r\nOK");*/
 #else
 	Serial.print("PID coefficients [Kp, Kd, Ki]: ");
 	Serial.print(Kp);
@@ -137,11 +137,11 @@ void vpidGetError(int argc, char *argv[]) 		// Get the PID error
 	float val = pid.getError();
 
 #ifdef __BOARD_YUN__
-	Console.print("PID Error: ");
+	/*Console.print("PID Error: ");
 	Console.println(val);
 
 	// Send an ACK();
-	Console.println("\r\nOK");
+	Console.println("\r\nOK");*/
 #else
 	Serial.print("PID Error: ");
 	Serial.println(val);

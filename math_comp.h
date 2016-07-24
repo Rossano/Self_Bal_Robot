@@ -15,7 +15,7 @@
 //#define __BOARD_YUN__
 #ifdef __BOARD_YUN__
 #include <Bridge.h>
-#include <Console.h>
+//#include <Console.h>
 #endif
 
 #define N_ROW		4		// State matrix row number
@@ -125,8 +125,8 @@ namespace math_comp {
 	inline void _vector<T,size>::printv() {
 		for (int i = 0; i < size; i++) {
 #ifdef __BOARD_YUN__
-			Console.print(el[i]);
-			Console.print(F("\t"));
+//			Console.print(el[i]);
+//			Console.print(F("\t"));
 		}
 		Console.println();
 #else
@@ -222,10 +222,10 @@ namespace math_comp {
 		for(int i = 0; i < N; i++) {
 			for(int j = 0; j < M; j++) {
 #ifdef __BOARD_YUN__
-				Console.print(el[i][j]);
-				Console.print("\t");
+//				Console.print(el[i][j]);
+//				Console.print("\t");
 			}
-			Console.println();
+//			Console.println();
 		}
 #else
 				Serial.print(el[i][j]);

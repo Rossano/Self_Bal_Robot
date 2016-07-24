@@ -336,90 +336,138 @@ uint8_t MPU6050::dmpInitialize() {
     setWakeCycleEnabled(true);*/
 
     // disable sleep mode
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Disabling sleep mode..."));
+#endif
     setSleepEnabled(false);
 
     // get MPU hardware revision
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Selecting user bank 16..."));
+#endif
     setMemoryBank(0x10, true, true);
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Selecting memory byte 6..."));
+#endif
     setMemoryStartAddress(0x06);
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Checking hardware revision..."));
+#endif
     uint8_t hwRevision = readMemoryByte();
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINT(F("Revision @ user[16][6] = "));
     DEBUG_PRINTLNF(hwRevision, HEX);
     DEBUG_PRINTLN(F("Resetting memory bank selection to 0..."));
+#endif
     setMemoryBank(0, false, false);
 
     // check OTP bank valid
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Reading OTP bank valid flag..."));
+#endif
     uint8_t otpValid = getOTPBankValid();
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINT(F("OTP bank is "));
     DEBUG_PRINTLN(otpValid ? F("valid!") : F("invalid!"));
+#endif
 
     // get X/Y/Z gyro offsets
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Reading gyro offset TC values..."));
+#endif
     int8_t xgOffsetTC = getXGyroOffsetTC();
     int8_t ygOffsetTC = getYGyroOffsetTC();
     int8_t zgOffsetTC = getZGyroOffsetTC();
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINT(F("X gyro offset = "));
     DEBUG_PRINTLN(xgOffset);
     DEBUG_PRINT(F("Y gyro offset = "));
     DEBUG_PRINTLN(ygOffset);
     DEBUG_PRINT(F("Z gyro offset = "));
     DEBUG_PRINTLN(zgOffset);
+#endif
 
     // setup weird slave stuff (?)
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Setting slave 0 address to 0x7F..."));
+#endif
     setSlaveAddress(0, 0x7F);
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Disabling I2C Master mode..."));
+#endif
     setI2CMasterModeEnabled(false);
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Setting slave 0 address to 0x68 (self)..."));
+#endif
     setSlaveAddress(0, 0x68);
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("Resetting I2C Master control..."));
+#endif
     resetI2CMaster();
     delay(20);
 
     // load DMP code into memory banks
+#if BOARD==ARDUINO_AVR_LEONARDO
     DEBUG_PRINT(F("Writing DMP code to MPU memory banks ("));
     DEBUG_PRINT(MPU6050_DMP_CODE_SIZE);
     DEBUG_PRINTLN(F(" bytes)"));
+#endif
     if (writeProgMemoryBlock(dmpMemory, MPU6050_DMP_CODE_SIZE)) {
+	#if BOARD==ARDUINO_AVR_LEONARDO
         DEBUG_PRINTLN(F("Success! DMP code written and verified."));
 
         // write DMP configuration
         DEBUG_PRINT(F("Writing DMP configuration to MPU memory banks ("));
         DEBUG_PRINT(MPU6050_DMP_CONFIG_SIZE);
         DEBUG_PRINTLN(F(" bytes in config def)"));
+	#endif	
         if (writeProgDMPConfigurationSet(dmpConfig, MPU6050_DMP_CONFIG_SIZE)) {
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Success! DMP configuration written and verified."));
-
+	
             DEBUG_PRINTLN(F("Setting clock source to Z Gyro..."));
+		#endif
             setClockSource(MPU6050_CLOCK_PLL_ZGYRO);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting DMP and FIFO_OFLOW interrupts enabled..."));
+		#endif
             setIntEnabled(0x12);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting sample rate to 200Hz..."));
+		#endif
             setRate(4); // 1khz / (1 + 4) = 200 Hz
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting external frame sync to TEMP_OUT_L[0]..."));
+		#endif
             setExternalFrameSync(MPU6050_EXT_SYNC_TEMP_OUT_L);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting DLPF bandwidth to 42Hz..."));
+		#endif
             setDLPFMode(MPU6050_DLPF_BW_42);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting gyro sensitivity to +/- 2000 deg/sec..."));
+		#endif
             setFullScaleGyroRange(MPU6050_GYRO_FS_2000);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting DMP configuration bytes (function unknown)..."));
+		#endif	
             setDMPConfig1(0x03);
             setDMPConfig2(0x00);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Clearing OTP Bank flag..."));
+		#endif
             setOTPBankValid(false);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting X/Y/Z gyro offset TCs to previous values..."));
+		#endif
             setXGyroOffsetTC(xgOffsetTC);
             setYGyroOffsetTC(ygOffsetTC);
             setZGyroOffsetTC(zgOffsetTC);
@@ -429,120 +477,178 @@ uint8_t MPU6050::dmpInitialize() {
             //setYGyroOffset(0);
             //setZGyroOffset(0);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Writing final memory update 1/7 (function unknown)..."));
+		#endif
             uint8_t dmpUpdate[16], j;
             uint16_t pos = 0;
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
             writeMemoryBlock(dmpUpdate + 3, dmpUpdate[2], dmpUpdate[0], dmpUpdate[1]);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Writing final memory update 2/7 (function unknown)..."));
+		#endif
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
             writeMemoryBlock(dmpUpdate + 3, dmpUpdate[2], dmpUpdate[0], dmpUpdate[1]);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Resetting FIFO..."));
+		#endif
             resetFIFO();
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Reading FIFO count..."));
+		#endif
             uint16_t fifoCount = getFIFOCount();
             uint8_t fifoBuffer[128];
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
+		#endif
             getFIFOBytes(fifoBuffer, fifoCount);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting motion detection threshold to 2..."));
+		#endif
             setMotionDetectionThreshold(2);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting zero-motion detection threshold to 156..."));
+		#endif
             setZeroMotionDetectionThreshold(156);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting motion detection duration to 80..."));
+		#endif
             setMotionDetectionDuration(80);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting zero-motion detection duration to 0..."));
+		#endif
             setZeroMotionDetectionDuration(0);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Resetting FIFO..."));
+		#endif
             resetFIFO();
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Enabling FIFO..."));
+		#endif
             setFIFOEnabled(true);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Enabling DMP..."));
+		#endif
             setDMPEnabled(true);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Resetting DMP..."));
+		#endif
             resetDMP();
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Writing final memory update 3/7 (function unknown)..."));
+		#endif
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
             writeMemoryBlock(dmpUpdate + 3, dmpUpdate[2], dmpUpdate[0], dmpUpdate[1]);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Writing final memory update 4/7 (function unknown)..."));
+		#endif
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
             writeMemoryBlock(dmpUpdate + 3, dmpUpdate[2], dmpUpdate[0], dmpUpdate[1]);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Writing final memory update 5/7 (function unknown)..."));
+		#endif
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
             writeMemoryBlock(dmpUpdate + 3, dmpUpdate[2], dmpUpdate[0], dmpUpdate[1]);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Waiting for FIFO count > 2..."));
+		#endif
             while ((fifoCount = getFIFOCount()) < 3);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
             DEBUG_PRINTLN(F("Reading FIFO data..."));
+		#endif
             getFIFOBytes(fifoBuffer, fifoCount);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Reading interrupt status..."));
+		#endif
             uint8_t mpuIntStatus = getIntStatus();
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINT(F("Current interrupt status="));
             DEBUG_PRINTLNF(mpuIntStatus, HEX);
 
             DEBUG_PRINTLN(F("Reading final memory update 6/7 (function unknown)..."));
+		#endif
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
             readMemoryBlock(dmpUpdate + 3, dmpUpdate[2], dmpUpdate[0], dmpUpdate[1]);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Waiting for FIFO count > 2..."));
+		#endif
             while ((fifoCount = getFIFOCount()) < 3);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINT(F("Current FIFO count="));
             DEBUG_PRINTLN(fifoCount);
 
             DEBUG_PRINTLN(F("Reading FIFO data..."));
+		#endif
             getFIFOBytes(fifoBuffer, fifoCount);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Reading interrupt status..."));
+		#endif
             mpuIntStatus = getIntStatus();
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINT(F("Current interrupt status="));
             DEBUG_PRINTLNF(mpuIntStatus, HEX);
 
             DEBUG_PRINTLN(F("Writing final memory update 7/7 (function unknown)..."));
+		#endif
             for (j = 0; j < 4 || j < dmpUpdate[2] + 3; j++, pos++) dmpUpdate[j] = pgm_read_byte(&dmpUpdates[pos]);
             writeMemoryBlock(dmpUpdate + 3, dmpUpdate[2], dmpUpdate[0], dmpUpdate[1]);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("DMP is good to go! Finally."));
 
             DEBUG_PRINTLN(F("Disabling DMP (you turn it on later)..."));
+		#endif
             setDMPEnabled(false);
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Setting up internal 42-byte (default) DMP packet buffer..."));
+		#endif
             dmpPacketSize = 42;
             /*if ((dmpPacketBuffer = (uint8_t *)malloc(42)) == 0) {
                 return 3; // TODO: proper error code for no memory
             }*/
 
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("Resetting FIFO and clearing INT status one last time..."));
+		#endif
             resetFIFO();
             getIntStatus();
         } else {
+		#if BOARD==ARDUINO_AVR_LEONARDO
             DEBUG_PRINTLN(F("ERROR! DMP configuration verification failed."));
+		#endif
             return 2; // configuration block loading failed
         }
     } else {
+	#if BOARD==ARDUINO_AVR_LEONARDO
         DEBUG_PRINTLN(F("ERROR! DMP code verification failed."));
+	#endif
         return 1; // main binary block loading failed
     }
     return 0; // success

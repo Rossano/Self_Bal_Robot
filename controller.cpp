@@ -15,7 +15,7 @@
 //#define __BOARD_YUN__
 #ifdef __BOARD_YUN__
 #include <Bridge.h>
-#include <Console.h>
+//#include <Console.h>
 #endif
  
 //#define DEFINE_CONTROLLER_IN_LIB
@@ -245,10 +245,10 @@ void vControllerGet(int argc, char *argv[]) {
 #endif
 
 #ifdef __BOARD_YUN__
-	Console.print(_K[0]); Console.print(F("\t"));
+/*	Console.print(_K[0]); Console.print(F("\t"));
 	Console.print(_K[1]); Console.print(F("\t"));
 	Console.print(_K[2]); Console.print(F("\t"));
-	Console.println(_K[3]);
+	Console.println(_K[3]);*/
 #else
 	Serial.print("cont: ");
 	Serial.print(_K[0]); Serial.print(F("\t"));
@@ -269,10 +269,10 @@ void vControllerState(int argc, char *argv[]) {
 	_K = controller.get_state();
 #ifdef USE_STATE_VECTOR
 	#ifdef __BOARD_YUN__
-	Console.print(_K[0]); Console.print(F("\t"));
+	/*Console.print(_K[0]); Console.print(F("\t"));
 	Console.print(_K[1]); Console.print(F("\t"));
 	Console.print(_K[2]); Console.print(F("\t"));
-	Console.println(_K[3]);
+	Console.println(_K[3]);*/
 	#else
 	Serial.print("state ");
 	Serial.print(_K[0]); Serial.print(F("\t"));
@@ -282,10 +282,10 @@ void vControllerState(int argc, char *argv[]) {
 	#endif
 #else
 	#ifdef __BOARD_YUN__
-	Console.print(*_K); Console.print(F("\t"));
+	/*Console.print(*_K); Console.print(F("\t"));
 	Console.print(*(_K+1)); Console.print(F("\t"));
 	Console.print(*(_K+2)); Console.print(F("\t"));
-	Console.print(*(_K+3));
+	Console.print(*(_K+3));*/
 	#else
 	Serial.print(*_K); Serial.print(F("\t"));
 	Serial.print(*(_K+1)); Serial.print(F("\t"));

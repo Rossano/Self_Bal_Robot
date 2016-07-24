@@ -31,7 +31,7 @@
 
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 #include <Bridge.h>
-#include <Console.h>
+//#include <Console.h>
 #endif
 
 #ifdef USE_NILRTOS
@@ -77,7 +77,7 @@ void imu_init()
 	
     // initialize device
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-	Console.println(F("Initializing I2C devices..."));
+//	Console.println(F("Initializing I2C devices..."));
 #else
     Serial.println(F("Initializing I2C devices..."));
 #endif
@@ -85,8 +85,8 @@ void imu_init()
 
     // verify connection
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-    Console.println(F("Testing device connections..."));
-    Console.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+    //Console.println(F("Testing device connections..."));
+    //Console.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 #else
     Serial.println(F("Testing device connections..."));
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
@@ -100,7 +100,7 @@ void imu_init()
 */
     // load and configure the DMP
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-    Console.println(F("Initializing DMP..."));
+    //Console.println(F("Initializing DMP..."));
 #else
     Serial.println(F("Initializing DMP..."));
 #endif    
@@ -118,7 +118,7 @@ void imu_init()
 			count = 10;
 			// turn on the DMP, now that it's ready
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-			Console.println(F("Enabling DMP..."));
+			//Console.println(F("Enabling DMP..."));
 #else			
 			Serial.println(F("Enabling DMP..."));
 #endif
@@ -128,7 +128,7 @@ void imu_init()
 
 			// set our DMP Ready flag so the main loop() function knows it's okay to use it
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-			Console.println(F("DMP ready! Waiting for first interrupt..."));
+			//Console.println(F("DMP ready! Waiting for first interrupt..."));
 #else
 			Serial.println(F("DMP ready! Waiting for first interrupt..."));
 #endif
@@ -144,11 +144,11 @@ void imu_init()
 			// 2 = DMP configuration updates failed
 			// (if it's going to break, usually the code will be 1)
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-			Console.print(F("DMP Initialization failed (code"));
-			Console.print(devStatus);
-			Console.println(F(")"));
+			//Console.print(F("DMP Initialization failed (code"));
+			//Console.print(devStatus);
+			//Console.println(F(")"));
 			// New attempt message
-			Console.println(F("Trying again"));
+			//Console.println(F("Trying again"));
 #else
 			Serial.print(F("DMP Initialization failed (code "));
 			Serial.print(devStatus);
@@ -167,7 +167,7 @@ void imu_init()
 //	if (!count) 
 	{	
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-		Console.println(F("DMP initializaion failed"));
+		//Console.println(F("DMP initializaion failed"));
 #else
 		Serial.println(F("DMP initialization failed"));
 #endif
@@ -192,8 +192,8 @@ void imu_read()
 
 #ifdef IRQ_DEBUG
 	#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-	Console.println(F("DMP is ready!\nAwaiting for IRQ ready flag"));
-	#else
+	//Console.println(F("DMP is ready!\nAwaiting for IRQ ready flag"));
+	#else	
 	Serial.println(F("DMP is ready!\nAwaiting for IRQ ready flag"));
 	#endif
 #endif
@@ -216,7 +216,7 @@ void imu_read()
 		// reset so we can continue cleanly
 		mpu.resetFIFO();
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-		Console.println(F("FIFO overflow!"));
+		//Console.println(F("FIFO overflow!"));
 #else
 		Serial.println(F("FIFO overflow!"));
 #endif
@@ -225,7 +225,7 @@ void imu_read()
 	} 
 	else if (mpuIntStatus & 0x02) {
 		// wait for correct available data length, should be a VERY short wait
-		while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+		while (fifoCount < packetSize)  fifoCount = mpu.getFIFOCount();
 
 		// read a packet from FIFO
 		mpu.getFIFOBytes(fifoBuffer, packetSize);
@@ -244,9 +244,9 @@ void imu_read()
 			if(--count) 
 			{
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-				Console.println(F("\nLOCKED\n"));
+				//Console.println(F("\nLOCKED\n"));
 				dmpReady = false;
-				Console.println(F("DMP is stalled, reinitializing..."));
+				//Console.println(F("DMP is stalled, reinitializing..."));
 #else
 				Serial.println(F("\nLOCKED\n"));
 				dmpReady = false;
@@ -262,9 +262,9 @@ void imu_read()
 				}
 				else {
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-					Console.print(F("DMP reinitialization failed (code "));
-					Console.print(devStatus);
-					Console.println(F(")"));
+					//Console.print(F("DMP reinitialization failed (code "));
+					//Console.print(devStatus);
+					//Console.println(F(")"));
 #else
 					Serial.print(F("DMP reinitialization failed (code "));
 					Serial.print(devStatus);
@@ -289,7 +289,7 @@ void imu_read()
 	else {
 #ifdef IRQ_DEBUG
 		#ifdef __BOARD_YUN__
-		Console.print(F("OK"));
+		//Console.print(F("OK"));
 		#else
 		Serial.print(F("OK "));
 		#endif
@@ -301,14 +301,14 @@ void imu_read()
 		mpu.dmpGetGyro(gyro, fifoBuffer);
 #ifdef DEBUG
 	#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-		Console.print(F("ypr gyro\t"));
-		Console.print(ypr[0] * 180/M_PI);
-		Console.print(F("\t"));
-		Console.print(ypr[1] * 180/M_PI);
-		Console.print(F("\t"));
-		Console.print(ypr[2] * 180/M_PI);
-		Console.print(F("\t"));
-		Console.println(gyro);
+		//Console.print(F("ypr gyro\t"));
+		//Console.print(ypr[0] * 180/M_PI);
+		//Console.print(F("\t"));
+		//Console.print(ypr[1] * 180/M_PI);
+		//Console.print(F("\t"));
+		//Console.print(ypr[2] * 180/M_PI);
+		//Console.print(F("\t"));
+		//Console.println(gyro);
 	#else
 		Serial.print(F("ypr gyro\t"));
 		Serial.print(ypr[0] * 180/M_PI);
@@ -341,7 +341,7 @@ void imu_isr()
 {
 #ifdef IRQ_DEBUG
 	#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-	Console.print(F("ISR"));
+	//Console.print(F("ISR"));
 	#else
 	Serial.print(F("ISR"));
 	#endif
