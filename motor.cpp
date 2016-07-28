@@ -165,22 +165,23 @@ void vMotorMove(int argc, char *argv[]) 		// Move the Bot
 {
 	if(argc != 2) {
 		vUsage("move <0=STOP 1=FORWARD 2=BACKWARD");
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 /*		Console.print(F("Move: "));
 		Console.println(motor.moveStatus);
 		Console.print(F("Turn: "));
 		Console.println(motor->turnStatus);*/
-#else
+#elif defined(ARDUINO_AVR_LEONARDO)
 		Serial.print(F("Move: "));
 		Serial.println(motor.moveStatus);
 		Serial.print(F("Turn: "));
 		Serial.println(motor.turnStatus);
+#else error "Arduino board unknown!"
 #endif
 	}
 	else {
 		uint8_t val = atoi(argv[0]);
 		uint8_t pwm = atoi(argv[1]);
-	#if BOARD==ARDUINO_AVR_LEONARDO
+	#ifdef ARDUINO_AVR_LEONARDO
 		Serial.print(F("arg: "));
 		Serial.println(val);
 	#endif

@@ -1,6 +1,6 @@
 //#include <MPU6050_9Axis_MotionApps41.h>
 #include <MPU6050.h>
-#include <helper_3dmath_OLD.h>
+/////#include <helper_3dmath_OLD.h>
 //#include <MPU6050_9Axis_MotionApps41.h>
 //#include <MPU6050.h>
 //#include <helper_3dmath_OLD.h>
@@ -39,7 +39,9 @@
 
 #include "board.h"
 #include "imu_mpu6050.h"
+#if 0
 #include "pid.h"
+#endif
 #include "controller.h"
 #include "motor.h"
 //#include "shell.h"

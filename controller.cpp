@@ -10,7 +10,9 @@
 //
 #include "math_comp.h"
 #include "controller.h"
+#if 0
 #include "shell.h"
+#endif
 
 //#define __BOARD_YUN__
 #ifdef __BOARD_YUN__
@@ -194,6 +196,8 @@ double * _controller::get_state() {
 }
 #endif
 
+#ifdef ARDUINO_AVR_LEONARDO
+
 // Controller Toggle ON/OFF
 void vControllerToggle(int argc, char *argv[]) {
 	if (argc != 1) {
@@ -298,6 +302,7 @@ void vControllerState(int argc, char *argv[]) {
 
 //void vControllerError(int argc, char *argv[]);			// Gets the controller error on terminal
 //void vControllerLastState(int argc, char *argv[]);		// Gets the controller last state on terminal
+#endif
 
 //} /* namespace controller */
 

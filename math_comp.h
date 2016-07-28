@@ -124,16 +124,17 @@ namespace math_comp {
 	template<class T, size_t size>
 	inline void _vector<T,size>::printv() {
 		for (int i = 0; i < size; i++) {
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 //			Console.print(el[i]);
 //			Console.print(F("\t"));
 		}
-		Console.println();
-#else
+//		Console.println();
+#elif defined(ARDUINO_AVR_LEONARDO)
 			Serial.print(el[i]);
 			Serial.print("\t");
 		}
 		Serial.println();
+#else error "Board Unknown!"
 #endif
 	}
 
@@ -221,18 +222,19 @@ namespace math_comp {
 	inline void _matrix<T,N,M>::printm() {
 		for(int i = 0; i < N; i++) {
 			for(int j = 0; j < M; j++) {
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 //				Console.print(el[i][j]);
 //				Console.print("\t");
 			}
 //			Console.println();
 		}
-#else
+#elif defined(ARDUINO_AVR_LEONARDO)
 				Serial.print(el[i][j]);
 				Serial.print("\t");
 			}
 			Serial.println();
 		}
+#else error "Board unknown!"
 #endif
 	}
 	/*

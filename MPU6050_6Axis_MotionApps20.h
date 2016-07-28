@@ -325,7 +325,9 @@ const unsigned char dmpUpdates[MPU6050_DMP_UPDATES_SIZE] PROGMEM = {
 
 uint8_t MPU6050::dmpInitialize() {
     // reset device
+#ifdef ARDUINO_AVR_LEONARDO
     DEBUG_PRINTLN(F("\n\nResetting MPU6050..."));
+#endif
     reset();
     delay(30); // wait after reset
 
