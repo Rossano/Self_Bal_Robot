@@ -135,6 +135,9 @@ int _motor::getPWM_B()
 	return pwmB;
 }
 
+
+#ifndef ARDUINO_AVR_YUN
+
 void vMotorTurn(int argc, char *argv[]) 		// Turn the Bot
 {
 	if(argc != 1) {
@@ -206,4 +209,6 @@ void vMotorMove(int argc, char *argv[]) 		// Move the Bot
 		motor.move_B(pwm);
 	}
 }
+
+#endif // ARDUINO_AVR_YUN
 

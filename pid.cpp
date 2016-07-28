@@ -95,10 +95,11 @@ void vpidSet(int argc, char *argv[]) 			// Set the PID coeff
 
 		pid.set_coefficients(val1, val2, val3);
 		// Send an ACK();
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN
 		//Console.println("\r\nOK");
-#else
+#elif defined(ARDUINO_AVR_LEONARDO)
 		Serial.println("\r\nOK");
+#else error "Board not defined!"
 #endif
 	}
 }
@@ -109,7 +110,7 @@ void vpidGet(int argc, char *argv[]) 			// Get the PID coeff
 
 	pid.get_coefficients(Kp, Kd, Ki);
 
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN
 	/*Console.print("PID coefficients [Kp, Kd, Ki]: ");
 	Console.print(Kp);
 	Console.print("\t");
@@ -119,7 +120,7 @@ void vpidGet(int argc, char *argv[]) 			// Get the PID coeff
 
 	// Send an ACK();
 	Console.println("\r\nOK");*/
-#else
+#elif defined(ARDUINO_AVR_LEONARDO)
 	Serial.print("PID coefficients [Kp, Kd, Ki]: ");
 	Serial.print(Kp);
 	Serial.print("\t");
@@ -129,6 +130,7 @@ void vpidGet(int argc, char *argv[]) 			// Get the PID coeff
 
 	// Send an ACK();
 	Serial.println("\r\nOK");
+#else error "Board not defined!"
 #endif
 }
 
@@ -136,18 +138,19 @@ void vpidGetError(int argc, char *argv[]) 		// Get the PID error
 {
 	float val = pid.getError();
 
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN
 	/*Console.print("PID Error: ");
 	Console.println(val);
 
 	// Send an ACK();
 	Console.println("\r\nOK");*/
-#else
+#elif defined(ARDUINO_AVR_LEONARDO)
 	Serial.print("PID Error: ");
 	Serial.println(val);
 
 	// Send an ACK();
 	Serial.println("\r\nOK");
+#else error "Board not defined!"
 #endif
 }
 

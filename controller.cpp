@@ -10,14 +10,14 @@
 //
 #include "math_comp.h"
 #include "controller.h"
-#if 0
+
+#ifndef ARDUINO_AVR_YUN 
 #include "shell.h"
-#endif
+#endif // !ARDUINO_AVR_YUN
 
 //#define __BOARD_YUN__
-#ifdef __BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN  //__BOARD_YUN__
 #include <Bridge.h>
-//#include <Console.h>
 #endif
  
 //#define DEFINE_CONTROLLER_IN_LIB

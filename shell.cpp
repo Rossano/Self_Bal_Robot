@@ -5,6 +5,8 @@
  *      Author: Ross
  */
 
+#ifdef ARDUINO_AVR_LEONARDO
+
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -419,4 +421,4 @@ void vSendACK(int argc, char *argv[])
 	}
 }
 
-
+#endif // ARDUINO_AVR_LEONARDO

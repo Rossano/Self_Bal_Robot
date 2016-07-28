@@ -5,6 +5,8 @@
  *  Author: Ross
  */ 
 
+#ifdef ARDUINO_AVR_YUN
+
 #include <Bridge.h>
 #include <YunServer.h>
 #include <YunClient.h>
@@ -119,3 +121,5 @@ void serverTask(YunClient client)
 		client.print(COMMAND_NOT_FOUND);
 	}
 }
+
+#endif // ARDUINO_AVR_YUN

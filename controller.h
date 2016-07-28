@@ -85,7 +85,8 @@ public:
 #ifdef DEFINE_CONTROLLER_IN_LIB
 //extern _controller controller(K1_DEFAULT, K2_DEFAULT, K3_DEFAULT, K4_DEFAULT);
 extern _controller controller;
-#endif
+#endif // DEFINE_CONTROLLER_IN_LIB
+
 // Enable/disable controller
 extern bool bEnableStateControl;
 //	Compensation Force to apply
@@ -103,7 +104,7 @@ math_comp::_matrix<double, VECTOR_SIZE, VECTOR_SIZE>;
 //
 //	Function prototypes
 //
-#ifdef ARDUINO_AVR_LEONARDO
+#ifndef ARDUINO_AVR_YUN
 void vControllerToggle(int argc, char *argv[]); 		// Controller Toggle ON/OFF
 void vControllerSet(int argc, char *argv[]);			// Sets feedback coefficients
 void vControllerGet(int argc, char *argv[]);			// Gets feedback coefficient on terminal

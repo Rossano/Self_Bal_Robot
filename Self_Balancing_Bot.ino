@@ -1,16 +1,23 @@
-//#include <MPU6050_9Axis_MotionApps41.h>
+/*
+ * Self_Balancing_Bot.ino
+ *
+ *  Created on: 31 août 2015
+ *      Author: Ross
+ *
+ *	Important: for Arduino Yun was mandatory to get rid of the USB module, else the sketch gets too big!
+ *	To do so, go in arduino IDE folder @: <Arduino IDE>\hardware\tools\avr\avr\include\avr\main.cpp
+ *
+ *	Comment/uncomment the following line!
+ *	#if defined(USBCON)
+ *	//	USBDevice.attach();
+ *	#endif
+ *
+ *	setup();
+ *
+ */
+
+
 #include <MPU6050.h>
-/////#include <helper_3dmath_OLD.h>
-//#include <MPU6050_9Axis_MotionApps41.h>
-//#include <MPU6050.h>
-//#include <helper_3dmath_OLD.h>
-//
-//#include <I2Cdev.h>
- 
-/*#include <MPU6050.h>
-#include <MPU6050_6Axis_MotionApps20.h>
-#include <helper_3dmath.h>
-*/
 // Do not remove the include below
 //#include "Self_Balancing_Bot.h"
 #include <Arduino.h>
@@ -22,53 +29,40 @@
 //#define __BOARD_YUN__
 #undef USE_NILRTOS
 
-//#include <helper_3dmath.h>
 #include <MPU6050.h>
-//#include <MPU6050_6Axis_MotionApps20.h>
-
-//#include <MPU6050.h>
-/*
-#include <Wire.h>
-#include <I2Cdev.h>
-#include <MPU6050_6Axis_MotionApps20.h>
-#include <helper_3dmath.h>
-*/
 #ifdef USE_NILRTOS
 #include <NilRTOS.h>
-#endif
+#endif // USE_NIL_RTOS
 
 #include "board.h"
 #include "imu_mpu6050.h"
-#if 0
+#ifdef USE_PID_CONTROLLER
 #include "pid.h"
+#else #include "controller.h"
 #endif
 #include "controller.h"
 #include "motor.h"
-//#include "shell.h"
 
-//#ifdef __BOARD_YUN__
 #ifdef ARDUINO_AVR_YUN
 #include <Bridge.h>
-//#include <Console.h>
-//#include <BridgeServer.h>
-//#include <BridgeClient.h>
 #include <YunServer.h>
 #include <YunClient.h>
 #include "server.h"
 //#else 
-#if defined ARDUINO_AVR_LEONARDO
+#elif defined (ARDUINO_AVR_LEONARDO)
 #include "shell.h"
-#endif
-//#endif
-#else
-#error "Unreconized ARDUINO BOARD"
+#else error "Unreconized ARDUINO BOARD"
 #endif
 
+/*
+ *	NIL RTOS Section
+ */
 #ifdef USE_NILRTOS
+
 #include <NilTimer1.h>
 
 #define STACKSIZE	32
-#endif
+#endif // USE_NILRTOS
 
 //#define PROMPT		"CALLOGERO>"
 #define CMD_STRING_LEN	32
@@ -88,48 +82,33 @@ uint8_t count = 0;
 //extern float ypr[3];
 extern int16_t gyro[3];
 int pwm = 0;
-//Motor left_motor(MOTOR_SHIELD_DIRA, MOTOR_SHIELD_PWMA);
-//Motor right_motor(MOTOR_SHIELD_DIRB, MOTOR_SHIELD_PWMB);
+extern bool mpuInterrupt;
 
-//bool isConnected = false;
-//bool blinkState = false;
-//_motor motor;
-//_pid pid;
 #ifdef ARDUINO_AVR_YUN
-//BridgeServer server;
 extern YunServer server;
-//#else 
-#if defined ARDUINO_AVR_LEONARDO
+#elif defined ARDUINO_AVR_LEONARDO
 extern cShell shell;
 #endif
-#endif
-
-//extern static ShellCommand_t ShellCommand[];
 
 //
 //	Function protorypes
 //
 #ifdef ARDUINO_AVR_YUN
 void serverTask(YunClient);
-#if defined ARDUINO_ARCH_LEONARDO
+#elif defined ARDUINO_ARCH_LEONARDO
 void CDC_Task();
 #endif
-#endif
+
 void initialize_robot();
 
+/*
+ *	NIL RTOS  Thread Definition
+ */ 
 #ifdef USE_NILRTOS
-//MPU6050 mpu;
-//extern SEMAPHORE_DECL(dmpSem, 1);
 extern semaphore_t dmpSem;
-//SEMAPHORE_DECL(dmpSem, 1);
 
 NIL_WORKING_AREA(waSelf_Balancing_Thread, STACKSIZE);
 NIL_WORKING_AREA(waControl_Thread, STACKSIZE);
-#endif
-
-extern bool mpuInterrupt;
-
-#ifdef USE_NILRTOS
 
 NIL_THREAD(self_balancing_thread, arg)
 {
@@ -188,7 +167,7 @@ NIL_THREADS_TABLE_BEGIN()
 	NIL_THREADS_TABLE_ENTRY("Control", control_thread, NULL, waControl_Thread, sizeof(waControl_Thread))
 NIL_THREADS_TABLE_END()
 
-#endif
+#endif // USE_NILRTOS
 
 
 //The setup function is called once at startup of the sketch
@@ -202,13 +181,6 @@ void setup()
 	server.listenOnLocalhost();
 	server.begin();
 	//Console.begin();
-/*	while(!server)
-	{
-	    digitalWrite(13, HIGH);
-	    delay(300);
-	    digitalWrite(13, LOW);
-	    delay(300);
-	} */
 #else
 	int count = 100;
 	Serial.begin(BAUDRATE);
