@@ -53,41 +53,36 @@
     <ListValues>
       <Value>__AVR_ATmega32u4__</Value>
       <Value>__AVR_ATmega32U4__</Value>
-      <Value>ARDUINO=160</Value>
+      <Value>ARDUINO=167</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
-      <Value>ARDUINO_AVR_YUN</Value>
+      <Value>ARDUINO_AVR_LEONARDO</Value>
       <Value>ARDUINO_ARCH_AVR</Value>
       <Value>USB_VID=0x2341</Value>
-      <Value>USB_PID=0x8041</Value>
-      <Value>USB_MANUFACTURER=</Value>
+      <Value>USB_PID=0x8036</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
-      <Value>{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include</Value>
-      <Value>{runtime.tools.avr-gcc.path}//avr/include/avr/</Value>
-      <Value>{runtime.tools.avr-gcc.path}/avr/include/</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/</Value>
       <Value>C:/Users/Ross/Documents/Arduino/libraries</Value>
       <Value>C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries</Value>
-      <Value>C:/arduino-1.6.0/libraries</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire/utility</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilTimer1/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilTimer1</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilRTOS/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilRTOS</Value>
-      <Value>C:/arduino-1.6.0/libraries/MPU6050/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/MPU6050</Value>
-      <Value>C:/arduino-1.6.0/libraries/I2Cdev/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/I2Cdev</Value>
-      <Value>C:/arduino-1.6.0/libraries/Bridge/src/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/Bridge/src</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/MPU6050/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/MPU6050</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/I2Cdev/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/I2Cdev</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/Bridge/src/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/Bridge/src</Value>
       <Value>../../Self_Bal_Robot</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/variants/yun</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/cores/arduino</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/leonardo</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -101,41 +96,36 @@
     <ListValues>
       <Value>__AVR_ATmega32u4__</Value>
       <Value>__AVR_ATmega32U4__</Value>
-      <Value>ARDUINO=160</Value>
+      <Value>ARDUINO=167</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
-      <Value>ARDUINO_AVR_YUN</Value>
+      <Value>ARDUINO_AVR_LEONARDO</Value>
       <Value>ARDUINO_ARCH_AVR</Value>
       <Value>USB_VID=0x2341</Value>
-      <Value>USB_PID=0x8041</Value>
-      <Value>USB_MANUFACTURER=</Value>
+      <Value>USB_PID=0x8036</Value>
     </ListValues>
   </avrgcccpp.compiler.symbols.DefSymbols>
   <avrgcccpp.compiler.directories.IncludePaths>
     <ListValues>
-      <Value>{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include</Value>
-      <Value>{runtime.tools.avr-gcc.path}//avr/include/avr/</Value>
-      <Value>{runtime.tools.avr-gcc.path}/avr/include/</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/</Value>
       <Value>C:/Users/Ross/Documents/Arduino/libraries</Value>
       <Value>C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries</Value>
-      <Value>C:/arduino-1.6.0/libraries</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire/utility</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilTimer1/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilTimer1</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilRTOS/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilRTOS</Value>
-      <Value>C:/arduino-1.6.0/libraries/MPU6050/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/MPU6050</Value>
-      <Value>C:/arduino-1.6.0/libraries/I2Cdev/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/I2Cdev</Value>
-      <Value>C:/arduino-1.6.0/libraries/Bridge/src/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/Bridge/src</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/MPU6050/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/MPU6050</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/I2Cdev/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/I2Cdev</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/Bridge/src/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/Bridge/src</Value>
       <Value>../../Self_Bal_Robot</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/variants/yun</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/cores/arduino</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/leonardo</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino</Value>
     </ListValues>
   </avrgcccpp.compiler.directories.IncludePaths>
   <avrgcccpp.compiler.optimization.level>Optimize (-O1)</avrgcccpp.compiler.optimization.level>
@@ -146,17 +136,20 @@
   <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
 </AvrGccCpp>
     </ToolchainSettings>
-    <VMSETTING_IncludePaths>C:/arduino-1.6.0/hardware/arduino/avr/cores/arduino;C:/arduino-1.6.0/hardware/arduino/avr/variants/yun;../../Self_Bal_Robot;C:/arduino-1.6.0/libraries;C:/arduino-1.6.0/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/Ross/Documents/Arduino/libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include;C:/arduino-1.6.0/libraries/Bridge/src;C:/arduino-1.6.0/libraries/Bridge/src/utility;C:/arduino-1.6.0/libraries/I2Cdev;C:/arduino-1.6.0/libraries/I2Cdev/utility;C:/arduino-1.6.0/libraries/NilRTOS;C:/arduino-1.6.0/libraries/NilRTOS/utility;C:/arduino-1.6.0/libraries/NilTimer1;C:/arduino-1.6.0/libraries/NilTimer1/utility;C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire;C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire/utility;C:/arduino-1.6.0/hardware/arduino/avr/variants/micro;C:/arduino-1.6.0/libraries/MPU6050;C:/arduino-1.6.0/libraries/MPU6050/utility;C:/arduino-1.5.1r2/hardware/arduino/avr/cores/arduino;C:/arduino-1.5.1r2/hardware/arduino/avr/variants/standard;C:/arduino-1.5.1r2/libraries/I2Cdev;C:/arduino-1.5.1r2/libraries/I2Cdev/utility;C:/arduino-1.5.1r2/libraries/MPU6050;C:/arduino-1.5.1r2/libraries/MPU6050/utility;C:/arduino-1.5.1r2/libraries/NilRTOS;C:/arduino-1.5.1r2/libraries/NilRTOS/utility;C:/arduino-1.5.1r2/libraries/NilTimer1;C:/arduino-1.5.1r2/libraries/NilTimer1/utility;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries/Wire;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries/Wire/utility;C:/arduino-1.5.1r2/libraries;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries;c:/arduino-1.5.1r2/hardware/tools/avr/avr/include/;c:/arduino-1.5.1r2/hardware/tools/avr/avr/include/avr/;c:/arduino-1.5.1r2/hardware/tools/avr/avr/;c:/arduino-1.5.1r2/hardware/tools/avr/lib/gcc/avr/4.3.2/include/;;</VMSETTING_IncludePaths>
+    <VMSETTING_IncludePaths>C:/arduino-1.6.0/hardware/arduino/avr/cores/arduino;C:/arduino-1.6.0/hardware/arduino/avr/variants/yun;../../Self_Bal_Robot;C:/arduino-1.6.0/libraries;C:/arduino-1.6.0/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/Ross/Documents/Arduino/libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include;C:/arduino-1.6.0/libraries/Bridge/src;C:/arduino-1.6.0/libraries/Bridge/src/utility;C:/arduino-1.6.0/libraries/I2Cdev;C:/arduino-1.6.0/libraries/I2Cdev/utility;C:/arduino-1.6.0/libraries/NilRTOS;C:/arduino-1.6.0/libraries/NilRTOS/utility;C:/arduino-1.6.0/libraries/NilTimer1;C:/arduino-1.6.0/libraries/NilTimer1/utility;C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire;C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire/utility;C:/arduino-1.6.0/hardware/arduino/avr/variants/micro;C:/arduino-1.6.0/libraries/MPU6050;C:/arduino-1.6.0/libraries/MPU6050/utility;C:/arduino-1.5.1r2/hardware/arduino/avr/cores/arduino;C:/arduino-1.5.1r2/hardware/arduino/avr/variants/standard;C:/arduino-1.5.1r2/libraries/I2Cdev;C:/arduino-1.5.1r2/libraries/I2Cdev/utility;C:/arduino-1.5.1r2/libraries/MPU6050;C:/arduino-1.5.1r2/libraries/MPU6050/utility;C:/arduino-1.5.1r2/libraries/NilRTOS;C:/arduino-1.5.1r2/libraries/NilRTOS/utility;C:/arduino-1.5.1r2/libraries/NilTimer1;C:/arduino-1.5.1r2/libraries/NilTimer1/utility;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries/Wire;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries/Wire/utility;C:/arduino-1.5.1r2/libraries;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries;c:/arduino-1.5.1r2/hardware/tools/avr/avr/include/;c:/arduino-1.5.1r2/hardware/tools/avr/avr/include/avr/;c:/arduino-1.5.1r2/hardware/tools/avr/avr/;c:/arduino-1.5.1r2/hardware/tools/avr/lib/gcc/avr/4.3.2/include/;;C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/yun;C:/Program Files (x86)/Arduino/libraries/Bridge/src;C:/Program Files (x86)/Arduino/libraries/Bridge/src/utility;C:/Program Files (x86)/Arduino/libraries/I2Cdev;C:/Program Files (x86)/Arduino/libraries/I2Cdev/utility;C:/Program Files (x86)/Arduino/libraries/MPU6050;C:/Program Files (x86)/Arduino/libraries/MPU6050/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/leonardo;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
       <VisualMicroSettings>
-        <arduino.board.name>yun</arduino.board.name>
-        <arduino.board.desc>Arduino Yún</arduino.board.desc>
-        <arduino.board.property_bag>name=Arduino Yún
-upload.via_ssh=true
+        <arduino.board.name>leonardo</arduino.board.name>
+        <arduino.board.desc>Arduino Leonardo</arduino.board.desc>
+        <arduino.board.property_bag>name=Arduino Leonardo
 vid.0=0x2341
-pid.0=0x0041
+pid.0=0x0036
 vid.1=0x2341
-pid.1=0x8041
+pid.1=0x8036
+vid.2=0x2A03
+pid.2=0x0036
+vid.3=0x2A03
+pid.3=0x8036
 upload.tool=avrdude
 upload.protocol=avr109
 upload.maximum_size=28672
@@ -168,26 +161,27 @@ upload.wait_for_upload_port=true
 bootloader.tool=avrdude
 bootloader.low_fuses=0xff
 bootloader.high_fuses=0xd8
-bootloader.extended_fuses=0xfb
-bootloader.file=caterina/Caterina-Yun.hex
+bootloader.extended_fuses=0xcb
+bootloader.file=caterina/Caterina-Leonardo.hex
 bootloader.unlock_bits=0x3F
 bootloader.lock_bits=0x2F
 build.mcu=atmega32u4
 build.f_cpu=16000000L
 build.vid=0x2341
-build.pid=0x8041
-build.usb_product="Arduino Yun"
-build.board=AVR_YUN
+build.pid=0x8036
+build.usb_product="Arduino Leonardo"
+build.board=AVR_LEONARDO
 build.core=arduino
-build.variant=yun
+build.variant=leonardo
 build.extra_flags={build.usb_flags}
-runtime.ide.path=C:\arduino-1.6.0
-build.system.path=C:\arduino-1.6.0\hardware\arduino\avr\system
-runtime.ide.version=160
+runtime.ide.path=C:\Program Files (x86)\Arduino
+runtime.os=windows
+build.system.path=C:\Program Files (x86)\Arduino\hardware\arduino\avr\system
+runtime.ide.version=167
 target_package=arduino
 target_platform=avr
-runtime.hardware.path=C:\arduino-1.6.0\hardware\arduino
-originalid=yun
+runtime.hardware.path=C:\Program Files (x86)\Arduino\hardware\arduino
+originalid=leonardo
 intellisense.tools.path={runtime.tools.avr-gcc.path}/
 intellisense.include.paths={intellisense.tools.path}avr/include/;{intellisense.tools.path}/avr/include/avr/;{intellisense.tools.path}lib\gcc\avr\4.8.1\include
 tools.atprogram.cmd.path=%AVRSTUDIO_EXE_PATH%\atbackend\atprogram
@@ -196,15 +190,20 @@ tools.atprogram.program.params.verbose=-v
 tools.atprogram.program.params.quiet=-q
 tools.atprogram.program.pattern="{cmd.path}" -d {build.mcu} {program.verbose} {program.extra_params} program -c -f "{build.path}\{build.project_name}.hex"
 tools.atprogram.program.xpattern="{cmd.path}" {AVRSTUDIO_BACKEND_CONNECTION} -d {build.mcu} {program.verbose} {program.extra_params} program -c -f "{build.path}\{build.project_name}.hex"
-version=1.6.0
-compiler.path={runtime.ide.path}/hardware/tools/avr/bin/
+version=1.6.9
+compiler.warning_flags=-w
+compiler.warning_flags.none=-w
+compiler.warning_flags.default=
+compiler.warning_flags.more=-Wall
+compiler.warning_flags.all=-Wall -Wextra
+compiler.path={runtime.tools.avr-gcc.path}/bin/
 compiler.c.cmd=avr-gcc
-compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -MMD
-compiler.c.elf.flags=-w -Os -Wl,--gc-sections
+compiler.c.flags=-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD
+compiler.c.elf.flags={compiler.warning_flags} -Os -Wl,--gc-sections
 compiler.c.elf.cmd=avr-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp
 compiler.cpp.cmd=avr-g++
-compiler.cpp.flags=-c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD
+compiler.cpp.flags=-c -g -Os {compiler.warning_flags} -std=gnu++11 -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD
 compiler.ar.cmd=avr-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=avr-objcopy
@@ -223,16 +222,23 @@ compiler.elf2hex.extra_flags=
 recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
 recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
 recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
-recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{build.path}/{archive_file}" "{object_file}"
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mmcu={build.mcu} {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" {object_files} "{build.path}/{archive_file}" "-L{build.path}" -lm
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.objcopy.eep.flags} {compiler.objcopy.eep.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.eep"
 recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
+recipe.output.tmp_file={build.project_name}.hex
+recipe.output.save_file={build.project_name}.{build.variant}.hex
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
 recipe.size.regex=^(?:\.text|\.data|\.bootloader)\s+([0-9]+).*
 recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
-tools.avrdude.cmd.path={runtime.ide.path}/hardware/tools/avr/bin/avrdude
-tools.avrdude.config.path={runtime.ide.path}/hardware/tools/avr/etc/avrdude.conf
+preproc.includes.flags=-w -x c++ -M -MG -MP
+recipe.preproc.includes="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {preproc.includes.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}"
+preproc.macros.flags=-w -x c++ -E -CC
+recipe.preproc.macros="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {preproc.macros.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{preprocessed_file_path}"
+tools.avrdude.path={runtime.tools.avrdude.path}
+tools.avrdude.cmd.path={path}/bin/avrdude
+tools.avrdude.config.path={path}/etc/avrdude.conf
 tools.avrdude.upload.params.verbose=-v
 tools.avrdude.upload.params.quiet=-q -q
 tools.avrdude.upload.pattern="{cmd.path}" "-C{config.path}" {upload.verbose} -p{build.mcu} -c{upload.protocol} -P{serial.port} -b{upload.speed} -D "-Uflash:w:{build.path}/{build.project_name}.hex:i"
@@ -245,9 +251,13 @@ tools.avrdude.erase.pattern="{cmd.path}" "-C{config.path}" {erase.verbose} -p{bu
 tools.avrdude.bootloader.params.verbose=-v
 tools.avrdude.bootloader.params.quiet=-q -q
 tools.avrdude.bootloader.pattern="{cmd.path}" "-C{config.path}" {bootloader.verbose} -p{build.mcu} -c{protocol} {program.extra_params} "-Uflash:w:{runtime.platform.path}/bootloaders/{bootloader.file}:i" -Ulock:w:{bootloader.lock_bits}:m
-build.usb_manufacturer=
+build.usb_manufacturer="Unknown"
 build.usb_flags=-DUSB_VID={build.vid} -DUSB_PID={build.pid} '-DUSB_MANUFACTURER={build.usb_manufacturer}' '-DUSB_PRODUCT={build.usb_product}'
 vm.platform.root.path=C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\arduino16x
+runtime.tools.avrdude.path=C:\Program Files (x86)\Arduino\hardware\tools\avr
+runtime.tools.avrdude-6.0.1-arduino5.path=C:\Program Files (x86)\Arduino\hardware\tools\avr
+runtime.tools.avr-gcc.path=C:\Program Files (x86)\Arduino\hardware\tools\avr
+runtime.tools.avr-gcc-4.8.1-arduino5.path=C:\Program Files (x86)\Arduino\hardware\tools\avr
 ide.hint=Arduino 1.6.x ide with support for downloaded Board Manager custom tools and hardware
 ide.location.key=Arduino16x
 ide.location.ide.winreg=Arduino 1.6.x Application
@@ -258,6 +268,7 @@ ide.default.package=arduino
 ide.default.platform=avr
 ide.multiplatform=true
 ide.includes=arduino.h
+ide.exe_name=arduino
 ide.platformswithoutpackage=false
 ide.includes.fallback=wprogram.h
 ide.extension=ino
@@ -273,9 +284,11 @@ ssh.user.name=root
 ssh.user.default.password=arduino
 ssh.host.wwwfiles.path=/www/sd
 build.working_directory={runtime.ide.path}
-ide.location.preferences=%VM_APPDATA_ROAMING%\arduino15\preferences.txt
-ide.location.preferences_fallback=%VM_APPDATA_ROAMING%\arduino\preferences.txt
-ide.location.contributions=%VM_APPDATA_ROAMING%\arduino15
+ide.location.preferences.portable={runtime.ide.path}\portable
+ide.location.preferences=%VM_APPDATA_LOCAL%\arduino15\preferences.txt
+ide.location.preferences_fallback=%VM_APPDATA_ROAMING%\arduino15\preferences.txt
+ide.location.contributions=%VM_APPDATA_LOCAL%\arduino15
+ide.location.contributions_fallback=%VM_APPDATA_ROAMING%\arduino15
 ide.contributions.boards.allow=true
 ide.contributions.boards.ignore_unless_rewrite_found=true
 ide.contributions.libraries.allow=true
@@ -283,8 +296,8 @@ ide.contributions.boards.support.urls.wiki=https://github.com/arduino/Arduino/wi
 ide.appid=arduino16x
 location.sketchbook=C:\Users\Ross\Documents\Arduino
 vm.core.include=arduino.h
-vm.boardsource.path=C:\arduino-1.6.0\hardware\arduino\avr
-runtime.platform.path=C:\arduino-1.6.0\hardware\arduino\avr
+vm.boardsource.path=C:\Program Files (x86)\Arduino\hardware\arduino\avr
+runtime.platform.path=C:\Program Files (x86)\Arduino\hardware\arduino\avr
 vm.platformname.name=avr
 build.arch=AVR
 </arduino.board.property_bag>
@@ -314,41 +327,36 @@ build.arch=AVR
     <ListValues>
       <Value>__AVR_ATmega32u4__</Value>
       <Value>__AVR_ATmega32U4__</Value>
-      <Value>ARDUINO=160</Value>
+      <Value>ARDUINO=167</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
-      <Value>ARDUINO_AVR_YUN</Value>
+      <Value>ARDUINO_AVR_LEONARDO</Value>
       <Value>ARDUINO_ARCH_AVR</Value>
       <Value>USB_VID=0x2341</Value>
-      <Value>USB_PID=0x8041</Value>
-      <Value>USB_MANUFACTURER=</Value>
+      <Value>USB_PID=0x8036</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>
     <ListValues>
-      <Value>{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include</Value>
-      <Value>{runtime.tools.avr-gcc.path}//avr/include/avr/</Value>
-      <Value>{runtime.tools.avr-gcc.path}/avr/include/</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/</Value>
       <Value>C:/Users/Ross/Documents/Arduino/libraries</Value>
       <Value>C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries</Value>
-      <Value>C:/arduino-1.6.0/libraries</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire/utility</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilTimer1/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilTimer1</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilRTOS/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilRTOS</Value>
-      <Value>C:/arduino-1.6.0/libraries/MPU6050/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/MPU6050</Value>
-      <Value>C:/arduino-1.6.0/libraries/I2Cdev/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/I2Cdev</Value>
-      <Value>C:/arduino-1.6.0/libraries/Bridge/src/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/Bridge/src</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/MPU6050/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/MPU6050</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/I2Cdev/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/I2Cdev</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/Bridge/src/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/Bridge/src</Value>
       <Value>../../Self_Bal_Robot</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/variants/yun</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/cores/arduino</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/leonardo</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -362,41 +370,36 @@ build.arch=AVR
     <ListValues>
       <Value>__AVR_ATmega32u4__</Value>
       <Value>__AVR_ATmega32U4__</Value>
-      <Value>ARDUINO=160</Value>
+      <Value>ARDUINO=167</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
       <Value>__AVR__</Value>
-      <Value>ARDUINO_AVR_YUN</Value>
+      <Value>ARDUINO_AVR_LEONARDO</Value>
       <Value>ARDUINO_ARCH_AVR</Value>
       <Value>USB_VID=0x2341</Value>
-      <Value>USB_PID=0x8041</Value>
-      <Value>USB_MANUFACTURER=</Value>
+      <Value>USB_PID=0x8036</Value>
     </ListValues>
   </avrgcccpp.compiler.symbols.DefSymbols>
   <avrgcccpp.compiler.directories.IncludePaths>
     <ListValues>
-      <Value>{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include</Value>
-      <Value>{runtime.tools.avr-gcc.path}//avr/include/avr/</Value>
-      <Value>{runtime.tools.avr-gcc.path}/avr/include/</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/</Value>
       <Value>C:/Users/Ross/Documents/Arduino/libraries</Value>
       <Value>C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries</Value>
-      <Value>C:/arduino-1.6.0/libraries</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire/utility</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilTimer1/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilTimer1</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilRTOS/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/NilRTOS</Value>
-      <Value>C:/arduino-1.6.0/libraries/MPU6050/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/MPU6050</Value>
-      <Value>C:/arduino-1.6.0/libraries/I2Cdev/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/I2Cdev</Value>
-      <Value>C:/arduino-1.6.0/libraries/Bridge/src/utility</Value>
-      <Value>C:/arduino-1.6.0/libraries/Bridge/src</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/MPU6050/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/MPU6050</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/I2Cdev/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/I2Cdev</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/Bridge/src/utility</Value>
+      <Value>C:/Program Files (x86)/Arduino/libraries/Bridge/src</Value>
       <Value>../../Self_Bal_Robot</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/variants/yun</Value>
-      <Value>C:/arduino-1.6.0/hardware/arduino/avr/cores/arduino</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/leonardo</Value>
+      <Value>C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino</Value>
     </ListValues>
   </avrgcccpp.compiler.directories.IncludePaths>
   <avrgcccpp.compiler.optimization.level>Optimize (-O1)</avrgcccpp.compiler.optimization.level>
@@ -407,17 +410,20 @@ build.arch=AVR
   <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
 </AvrGccCpp>
     </ToolchainSettings>
-    <VMSETTING_IncludePaths>C:/arduino-1.6.0/hardware/arduino/avr/cores/arduino;C:/arduino-1.6.0/hardware/arduino/avr/variants/yun;../../Self_Bal_Robot;C:/arduino-1.6.0/libraries;C:/arduino-1.6.0/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/Ross/Documents/Arduino/libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include;C:/arduino-1.6.0/libraries/Bridge/src;C:/arduino-1.6.0/libraries/Bridge/src/utility;C:/arduino-1.6.0/libraries/I2Cdev;C:/arduino-1.6.0/libraries/I2Cdev/utility;C:/arduino-1.6.0/libraries/NilRTOS;C:/arduino-1.6.0/libraries/NilRTOS/utility;C:/arduino-1.6.0/libraries/NilTimer1;C:/arduino-1.6.0/libraries/NilTimer1/utility;C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire;C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire/utility;C:/arduino-1.6.0/hardware/arduino/avr/variants/micro;C:/arduino-1.6.0/libraries/MPU6050;C:/arduino-1.6.0/libraries/MPU6050/utility;C:/arduino-1.5.1r2/hardware/arduino/avr/cores/arduino;C:/arduino-1.5.1r2/hardware/arduino/avr/variants/standard;C:/arduino-1.5.1r2/libraries/I2Cdev;C:/arduino-1.5.1r2/libraries/I2Cdev/utility;C:/arduino-1.5.1r2/libraries/MPU6050;C:/arduino-1.5.1r2/libraries/MPU6050/utility;C:/arduino-1.5.1r2/libraries/NilRTOS;C:/arduino-1.5.1r2/libraries/NilRTOS/utility;C:/arduino-1.5.1r2/libraries/NilTimer1;C:/arduino-1.5.1r2/libraries/NilTimer1/utility;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries/Wire;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries/Wire/utility;C:/arduino-1.5.1r2/libraries;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries;c:/arduino-1.5.1r2/hardware/tools/avr/avr/include/;c:/arduino-1.5.1r2/hardware/tools/avr/avr/include/avr/;c:/arduino-1.5.1r2/hardware/tools/avr/avr/;c:/arduino-1.5.1r2/hardware/tools/avr/lib/gcc/avr/4.3.2/include/;;</VMSETTING_IncludePaths>
+    <VMSETTING_IncludePaths>C:/arduino-1.6.0/hardware/arduino/avr/cores/arduino;C:/arduino-1.6.0/hardware/arduino/avr/variants/yun;../../Self_Bal_Robot;C:/arduino-1.6.0/libraries;C:/arduino-1.6.0/hardware/arduino/avr/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/Ross/Documents/Arduino/libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib/gcc/avr/4.8.1/include;C:/arduino-1.6.0/libraries/Bridge/src;C:/arduino-1.6.0/libraries/Bridge/src/utility;C:/arduino-1.6.0/libraries/I2Cdev;C:/arduino-1.6.0/libraries/I2Cdev/utility;C:/arduino-1.6.0/libraries/NilRTOS;C:/arduino-1.6.0/libraries/NilRTOS/utility;C:/arduino-1.6.0/libraries/NilTimer1;C:/arduino-1.6.0/libraries/NilTimer1/utility;C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire;C:/arduino-1.6.0/hardware/arduino/avr/libraries/Wire/utility;C:/arduino-1.6.0/hardware/arduino/avr/variants/micro;C:/arduino-1.6.0/libraries/MPU6050;C:/arduino-1.6.0/libraries/MPU6050/utility;C:/arduino-1.5.1r2/hardware/arduino/avr/cores/arduino;C:/arduino-1.5.1r2/hardware/arduino/avr/variants/standard;C:/arduino-1.5.1r2/libraries/I2Cdev;C:/arduino-1.5.1r2/libraries/I2Cdev/utility;C:/arduino-1.5.1r2/libraries/MPU6050;C:/arduino-1.5.1r2/libraries/MPU6050/utility;C:/arduino-1.5.1r2/libraries/NilRTOS;C:/arduino-1.5.1r2/libraries/NilRTOS/utility;C:/arduino-1.5.1r2/libraries/NilTimer1;C:/arduino-1.5.1r2/libraries/NilTimer1/utility;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries/Wire;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries/Wire/utility;C:/arduino-1.5.1r2/libraries;C:/arduino-1.5.1r2/hardware/arduino/avr/libraries;c:/arduino-1.5.1r2/hardware/tools/avr/avr/include/;c:/arduino-1.5.1r2/hardware/tools/avr/avr/include/avr/;c:/arduino-1.5.1r2/hardware/tools/avr/avr/;c:/arduino-1.5.1r2/hardware/tools/avr/lib/gcc/avr/4.3.2/include/;;C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/yun;C:/Program Files (x86)/Arduino/libraries/Bridge/src;C:/Program Files (x86)/Arduino/libraries/Bridge/src/utility;C:/Program Files (x86)/Arduino/libraries/I2Cdev;C:/Program Files (x86)/Arduino/libraries/I2Cdev/utility;C:/Program Files (x86)/Arduino/libraries/MPU6050;C:/Program Files (x86)/Arduino/libraries/MPU6050/utility;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/utility;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries;C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include/;C:/Program Files (x86)/Arduino/hardware/tools/avr//avr/include/avr/;C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include;C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/leonardo;</VMSETTING_IncludePaths>
     <VisualMicroSettings>
       <VisualMicroSettings>
-        <arduino.board.name>yun</arduino.board.name>
-        <arduino.board.desc>Arduino Yún</arduino.board.desc>
-        <arduino.board.property_bag>name=Arduino Yún
-upload.via_ssh=true
+        <arduino.board.name>leonardo</arduino.board.name>
+        <arduino.board.desc>Arduino Leonardo</arduino.board.desc>
+        <arduino.board.property_bag>name=Arduino Leonardo
 vid.0=0x2341
-pid.0=0x0041
+pid.0=0x0036
 vid.1=0x2341
-pid.1=0x8041
+pid.1=0x8036
+vid.2=0x2A03
+pid.2=0x0036
+vid.3=0x2A03
+pid.3=0x8036
 upload.tool=avrdude
 upload.protocol=avr109
 upload.maximum_size=28672
@@ -429,26 +435,27 @@ upload.wait_for_upload_port=true
 bootloader.tool=avrdude
 bootloader.low_fuses=0xff
 bootloader.high_fuses=0xd8
-bootloader.extended_fuses=0xfb
-bootloader.file=caterina/Caterina-Yun.hex
+bootloader.extended_fuses=0xcb
+bootloader.file=caterina/Caterina-Leonardo.hex
 bootloader.unlock_bits=0x3F
 bootloader.lock_bits=0x2F
 build.mcu=atmega32u4
 build.f_cpu=16000000L
 build.vid=0x2341
-build.pid=0x8041
-build.usb_product="Arduino Yun"
-build.board=AVR_YUN
+build.pid=0x8036
+build.usb_product="Arduino Leonardo"
+build.board=AVR_LEONARDO
 build.core=arduino
-build.variant=yun
+build.variant=leonardo
 build.extra_flags={build.usb_flags}
-runtime.ide.path=C:\arduino-1.6.0
-build.system.path=C:\arduino-1.6.0\hardware\arduino\avr\system
-runtime.ide.version=160
+runtime.ide.path=C:\Program Files (x86)\Arduino
+runtime.os=windows
+build.system.path=C:\Program Files (x86)\Arduino\hardware\arduino\avr\system
+runtime.ide.version=167
 target_package=arduino
 target_platform=avr
-runtime.hardware.path=C:\arduino-1.6.0\hardware\arduino
-originalid=yun
+runtime.hardware.path=C:\Program Files (x86)\Arduino\hardware\arduino
+originalid=leonardo
 intellisense.tools.path={runtime.tools.avr-gcc.path}/
 intellisense.include.paths={intellisense.tools.path}avr/include/;{intellisense.tools.path}/avr/include/avr/;{intellisense.tools.path}lib\gcc\avr\4.8.1\include
 tools.atprogram.cmd.path=%AVRSTUDIO_EXE_PATH%\atbackend\atprogram
@@ -457,15 +464,20 @@ tools.atprogram.program.params.verbose=-v
 tools.atprogram.program.params.quiet=-q
 tools.atprogram.program.pattern="{cmd.path}" -d {build.mcu} {program.verbose} {program.extra_params} program -c -f "{build.path}\{build.project_name}.hex"
 tools.atprogram.program.xpattern="{cmd.path}" {AVRSTUDIO_BACKEND_CONNECTION} -d {build.mcu} {program.verbose} {program.extra_params} program -c -f "{build.path}\{build.project_name}.hex"
-version=1.6.0
-compiler.path={runtime.ide.path}/hardware/tools/avr/bin/
+version=1.6.9
+compiler.warning_flags=-w
+compiler.warning_flags.none=-w
+compiler.warning_flags.default=
+compiler.warning_flags.more=-Wall
+compiler.warning_flags.all=-Wall -Wextra
+compiler.path={runtime.tools.avr-gcc.path}/bin/
 compiler.c.cmd=avr-gcc
-compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -MMD
-compiler.c.elf.flags=-w -Os -Wl,--gc-sections
+compiler.c.flags=-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD
+compiler.c.elf.flags={compiler.warning_flags} -Os -Wl,--gc-sections
 compiler.c.elf.cmd=avr-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp
 compiler.cpp.cmd=avr-g++
-compiler.cpp.flags=-c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD
+compiler.cpp.flags=-c -g -Os {compiler.warning_flags} -std=gnu++11 -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD
 compiler.ar.cmd=avr-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=avr-objcopy
@@ -484,16 +496,23 @@ compiler.elf2hex.extra_flags=
 recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
 recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
 recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
-recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{build.path}/{archive_file}" "{object_file}"
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mmcu={build.mcu} {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" {object_files} "{build.path}/{archive_file}" "-L{build.path}" -lm
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.objcopy.eep.flags} {compiler.objcopy.eep.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.eep"
 recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
+recipe.output.tmp_file={build.project_name}.hex
+recipe.output.save_file={build.project_name}.{build.variant}.hex
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
 recipe.size.regex=^(?:\.text|\.data|\.bootloader)\s+([0-9]+).*
 recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
-tools.avrdude.cmd.path={runtime.ide.path}/hardware/tools/avr/bin/avrdude
-tools.avrdude.config.path={runtime.ide.path}/hardware/tools/avr/etc/avrdude.conf
+preproc.includes.flags=-w -x c++ -M -MG -MP
+recipe.preproc.includes="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {preproc.includes.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}"
+preproc.macros.flags=-w -x c++ -E -CC
+recipe.preproc.macros="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {preproc.macros.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{preprocessed_file_path}"
+tools.avrdude.path={runtime.tools.avrdude.path}
+tools.avrdude.cmd.path={path}/bin/avrdude
+tools.avrdude.config.path={path}/etc/avrdude.conf
 tools.avrdude.upload.params.verbose=-v
 tools.avrdude.upload.params.quiet=-q -q
 tools.avrdude.upload.pattern="{cmd.path}" "-C{config.path}" {upload.verbose} -p{build.mcu} -c{upload.protocol} -P{serial.port} -b{upload.speed} -D "-Uflash:w:{build.path}/{build.project_name}.hex:i"
@@ -506,9 +525,13 @@ tools.avrdude.erase.pattern="{cmd.path}" "-C{config.path}" {erase.verbose} -p{bu
 tools.avrdude.bootloader.params.verbose=-v
 tools.avrdude.bootloader.params.quiet=-q -q
 tools.avrdude.bootloader.pattern="{cmd.path}" "-C{config.path}" {bootloader.verbose} -p{build.mcu} -c{protocol} {program.extra_params} "-Uflash:w:{runtime.platform.path}/bootloaders/{bootloader.file}:i" -Ulock:w:{bootloader.lock_bits}:m
-build.usb_manufacturer=
+build.usb_manufacturer="Unknown"
 build.usb_flags=-DUSB_VID={build.vid} -DUSB_PID={build.pid} '-DUSB_MANUFACTURER={build.usb_manufacturer}' '-DUSB_PRODUCT={build.usb_product}'
 vm.platform.root.path=C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\arduino16x
+runtime.tools.avrdude.path=C:\Program Files (x86)\Arduino\hardware\tools\avr
+runtime.tools.avrdude-6.0.1-arduino5.path=C:\Program Files (x86)\Arduino\hardware\tools\avr
+runtime.tools.avr-gcc.path=C:\Program Files (x86)\Arduino\hardware\tools\avr
+runtime.tools.avr-gcc-4.8.1-arduino5.path=C:\Program Files (x86)\Arduino\hardware\tools\avr
 ide.hint=Arduino 1.6.x ide with support for downloaded Board Manager custom tools and hardware
 ide.location.key=Arduino16x
 ide.location.ide.winreg=Arduino 1.6.x Application
@@ -519,6 +542,7 @@ ide.default.package=arduino
 ide.default.platform=avr
 ide.multiplatform=true
 ide.includes=arduino.h
+ide.exe_name=arduino
 ide.platformswithoutpackage=false
 ide.includes.fallback=wprogram.h
 ide.extension=ino
@@ -534,9 +558,11 @@ ssh.user.name=root
 ssh.user.default.password=arduino
 ssh.host.wwwfiles.path=/www/sd
 build.working_directory={runtime.ide.path}
-ide.location.preferences=%VM_APPDATA_ROAMING%\arduino15\preferences.txt
-ide.location.preferences_fallback=%VM_APPDATA_ROAMING%\arduino\preferences.txt
-ide.location.contributions=%VM_APPDATA_ROAMING%\arduino15
+ide.location.preferences.portable={runtime.ide.path}\portable
+ide.location.preferences=%VM_APPDATA_LOCAL%\arduino15\preferences.txt
+ide.location.preferences_fallback=%VM_APPDATA_ROAMING%\arduino15\preferences.txt
+ide.location.contributions=%VM_APPDATA_LOCAL%\arduino15
+ide.location.contributions_fallback=%VM_APPDATA_ROAMING%\arduino15
 ide.contributions.boards.allow=true
 ide.contributions.boards.ignore_unless_rewrite_found=true
 ide.contributions.libraries.allow=true
@@ -544,8 +570,8 @@ ide.contributions.boards.support.urls.wiki=https://github.com/arduino/Arduino/wi
 ide.appid=arduino16x
 location.sketchbook=C:\Users\Ross\Documents\Arduino
 vm.core.include=arduino.h
-vm.boardsource.path=C:\arduino-1.6.0\hardware\arduino\avr
-runtime.platform.path=C:\arduino-1.6.0\hardware\arduino\avr
+vm.boardsource.path=C:\Program Files (x86)\Arduino\hardware\arduino\avr
+runtime.platform.path=C:\Program Files (x86)\Arduino\hardware\arduino\avr
 vm.platformname.name=avr
 build.arch=AVR
 </arduino.board.property_bag>
@@ -610,6 +636,12 @@ build.arch=AVR
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Pid_test.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="server.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="server.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="shell.cpp">

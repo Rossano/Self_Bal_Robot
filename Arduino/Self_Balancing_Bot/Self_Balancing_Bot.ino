@@ -52,6 +52,7 @@
 #define CMD_STRING_LEN	32
 #define DECIMATION		100
 #define AXE_TO_USE		2
+#define GYRO_CONV     940
 #undef STAND_ALONE
 #undef DEBUG
 //
@@ -214,7 +215,8 @@ void loop()
 #else
 	imu_read();
 	double theta = ypr[AXE_TO_USE];// + 0.06;
-	double theta_dot = -((double)gyro[AXE_TO_USE] / 131.0);
+	//double theta_dot = -((double)gyro[AXE_TO_USE] / 131.0);
+ double theta_dot = -((double)gyro[AXE_TO_USE] / GYRO_CONV);
 	controller.set_state(theta, theta_dot, 0.0, 0.0);
 	F = controller.calculate();
 

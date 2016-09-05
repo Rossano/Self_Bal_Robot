@@ -13,7 +13,7 @@ namespace Arduino
     {
         #region Constants
 
-        public const string get_val_Id = "MPU:";
+        public const string get_val_Id = "AVR> MPU:";
         public const string cont_get_Id = "cont";
         public const string cont_state_Id = "state";
         public const string lock_Id = "DMP";

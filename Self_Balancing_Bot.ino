@@ -95,7 +95,7 @@ extern cShell shell;
 //
 #ifdef ARDUINO_AVR_YUN
 void serverTask(YunClient);
-#elif defined ARDUINO_ARCH_LEONARDO
+#elif defined ARDUINO_AVR_LEONARDO
 void CDC_Task();
 #endif
 
@@ -329,7 +329,7 @@ void CDC_Task()
 	//	Until data are available from the Serial Port read the data and store it into the input buffer cmdString
 	//	Process ends if '\n' is received or the MAX input string length is reached
 	//
-//#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
+#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 	while(Console.available()) {
 		//	If '\n" is received or MAX string lenght is reached set the cmdReady flag
 		if (++inBufCount == CMD_STRING_LEN) ch = '\n';
@@ -339,6 +339,7 @@ void CDC_Task()
 		}
 		if (ch == '\n') cmdReady = true;
 	}
+#endif
 //#else
 	while(Serial.available()) {
 		//	If '\n" is received or MAX string lenght is reached set the cmdReady flag

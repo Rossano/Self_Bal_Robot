@@ -58,6 +58,7 @@ namespace Arduino
         public float[] K;
         public float F;
         public bool _controllerActive;
+        public int pwm;
         public enum moveRobot_type
         {
             _FORWARD,
@@ -130,12 +131,14 @@ namespace Arduino
                 if (string.IsNullOrEmpty(foo) || !found) return;
                 char[] separators = { ' ', ',', ':' };
                 string[] tokens = foo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                timeStamp = Convert.ToInt64(tokens[0]);
+                timeStamp = Convert.ToInt64(tokens[2]);
                 for (int i = 0; i < 2; i++)
                 {
-                    _angles[i] = (float)Convert.ToDouble(tokens[i + 1]);
+                    _angles[i] = (float)Convert.ToDouble(tokens[i + 3]);
                 }
-                gyro = Convert.ToInt16(tokens[5]);
+                gyro = Convert.ToInt16(tokens[6]);
+                F = (float)Convert.ToDouble(tokens[7]);
+                pwm = Convert.ToInt16(tokens[8]);
                 getControllerState();
             }
             catch(Exception ex)

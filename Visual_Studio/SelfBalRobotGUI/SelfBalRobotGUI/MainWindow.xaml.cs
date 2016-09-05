@@ -44,7 +44,7 @@ namespace SelfBalRobotGUI
         private int _motorPwm = 0;
         private bool _motorON = false;
         private bool _motorDir = true;
-        
+
         #endregion
 
         #region Constructor
@@ -81,10 +81,10 @@ namespace SelfBalRobotGUI
                 //System.Threading.Thread.Sleep(2000);
                 //  Empty buffer
                 //Thread.Sleep(1000);
-                int k1 = -1560;
-                int k2 = -270;
-                int k3 = -480;
-                int k4 = -90;
+                int k1 = -1675;
+                int k2 = -18262;
+                int k3 = 1813;
+                int k4 = 8922;
                 _robot.setControllerFeedback(k1, k2, k3, k4);
                 K1_Text.Text = k1.ToString();
                 K2_Text.Text = k2.ToString();
@@ -113,11 +113,13 @@ namespace SelfBalRobotGUI
             {
                 try
                 {
-                    requestIMUData();
+                    //requestIMUData();
 //                    Thread.Sleep(10);
-                    readBuf = _robot.getBuffer();
+                    
+                    //readBuf = _robot.getBuffer();
+                    _robot.getIMUData();
                     //_robot.getControllerState();
-                    if (string.IsNullOrEmpty(readBuf)) return;
+                   /* if (string.IsNullOrEmpty(readBuf)) return;
                     char[] separators = { ' ', ':', '\t', '\r', '\n' };
                     string[] tokens = readBuf.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                     int offs = 0;
@@ -133,8 +135,18 @@ namespace SelfBalRobotGUI
                         else i++;
                     }
                     if (!isFound) return;                  
-                    
-                    timeStamp.Content  = tokens[offs + 1];
+                    */
+
+                    timeStamp.Content = _robot.timeStamp;
+                    YawAngle.Content = -_robot._angles[0];
+                    PitchAngle.Content = _robot._angles[1];
+                    RollAngle.Content = _robot._angles[2];
+                    GyroSpeed.Content = -_robot.gyro;
+                    Force.Content = _robot.F;
+                    PWMLeft.Content = _robot.pwm;
+                    PWMRight.Content = _robot.pwm;
+
+                    /*timeStamp.Content  = tokens[offs + 1];
                     YawAngle.Content   = tokens[offs + 2];
                     RollAngle.Content  = tokens[offs + 3];
                     PitchAngle.Content = tokens[offs + 4];
@@ -143,7 +155,7 @@ namespace SelfBalRobotGUI
                     Force.Content    = tokens[offs + 6];
                     PWMLeft.Content  = tokens[offs + 7];
                     PWMRight.Content = tokens[offs + 7];
-
+                    */
                     _robot.getControllerState();
                     
                     Theta.Content    = _robot._state[0];
