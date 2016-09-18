@@ -28,7 +28,7 @@ namespace SelfBalRobotGUI
         const string request_feedback = "get_fb";
         const string request_info = "info";
         const string set_fb_coeff = "set_coeff";
-        const int ReadInterval = 500;
+        const int ReadInterval = 100;
         
         #endregion
 

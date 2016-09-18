@@ -31,8 +31,8 @@ M = 0.02; // Kg
 g = 9.81;   // m/s¨2
 
 // Wheels
-r = 5*0.021;    // m
-m = 0.015;  // Kg
+r = 0.021;    // m
+m = 0.019;  // Kg
 Jw = 1/2*m*r^2;
 
 // Motor
@@ -47,19 +47,22 @@ Km = Tstall/Vstall; // [N m/V] Motor torque gain
 Ke = 1e-6;              // [V s/rad]
 
 // Robot Body
-M1 = 0.1;           // [Kg] bottom plate
-M2 = 0.1;           // [Kg] top plate
+M1 = 0.182;           // [Kg] bottom plate
+M2 = 0.102;           // [Kg] top plate
 Ma = 0.030;         // [Kg] Arduino
-M3 = 0.3;           // [Kg] Batteries
+M3 = 0.162;           // [Kg] Batteries
 h1 = 0.01;
-h2 = 0.050;
-h3 = 0.058;
-D1 = 0.1;
-W1 = 0.2;
+h2 = 0.076;
+h3 = 0.08;
+D1 = 0.100;
+W1 = 0.180;
+Z1 = 0.005;
 D2 = D1;
 W2 = W1;
-D3 = 0.057;
+Z2 = Z1;
+D3 = 0.038;
 W3 = 0.09;
+Z3 = 0.016;
 
 // Total Mass
 M = M1 + M2 + M3 + Ma;
@@ -99,14 +102,14 @@ B = [2*Km*(M*l-r*beta)/(R*r*alpha);
     0;
     2*Km*(J+M*l^2-M*l*r)/(R*r*alpha);
     0];
-C = [1 0 0 0
-    0 1 0 0; 
-    0 0 1 0;
-    0 0 0 1];
-D = [0; 
-    0;
-    0;
-    0];
+C = [1 0 0 0];
+    //0 1 0 0; 
+    //0 0 1 0;
+    //0 0 0 1];
+D = [0]; 
+    //0;
+    //0;
+    //0];
     
 // System Definition
 sys = syslin('c', A, B, C, D);
@@ -158,6 +161,8 @@ disp(K1, 'Using Ackmermann formula K = ');
 K2 = ppol(A,B,P);
 disp(K2, 'Using ppol function K = ');
 
+Ku = (C*(inv(A-B*K2)*B));
+
 //
 //  Simulating back the system
 //
@@ -168,8 +173,9 @@ T = C*inv(s*eye(4,4)-(A-B*K1))*B;
 Tf=1/(1+0.05*Tf);
 disp(Tf,'Final transfer funtion T = ');
 Acl = A - B*K2;
+Bcl = B*Ku;
 disp(roots(determ(s*eye(4,4)-Acl)),"Acl poles : ");
-SysCL = syslin('c',Acl, B, C, D);
+SysCL = syslin('c',Acl, Bcl, C, D);
 //yimp = csim('imp',t,Tf);
 //ystp = csim('step',t,Tf);
 yimp = csim('imp', t, SysCL);
