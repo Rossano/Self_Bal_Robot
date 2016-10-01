@@ -246,7 +246,8 @@ namespace Arduino
                 }
                 else
                 {
-                    _controllerActive = active;                    arduinoWrite(toggle_controller + " 0");
+                    _controllerActive = active;
+                    arduinoWrite(toggle_controller + " 0");
 
                 }
             }
