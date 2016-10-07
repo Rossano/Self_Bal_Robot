@@ -99,7 +99,7 @@ disp(B, 'State Matrix B');
 //
 //  Desired Behavoir
 //
-Ts = 1;//0.5;   //  Settling time
+Ts = 100;//0.5;   //  Settling time
 OS = 0.15;  //  Overshoot
 zeta = sqrt(1/(1+%pi^2/(log(OS))^2));//0.6*(1-OS);
 wn = 4.6/zeta/Ts; //2 / zeta / Ts;
@@ -131,17 +131,30 @@ P = poles;
 K2 = ppol(A,B,P);
 disp(K2, 'Using ppol function K = ');
 
-Ku = 1/(C*(inv(A-B*K2)*B));
+Ku = 1;///(C*(inv(A-B*K2)*B));
 
 ref = 0;
 dt = 0.01;
 tfin = 1;
 t = 0:dt:tfin;
-Acl = A-B*K2/10;
+Acl = A-B*K2;
 Bcl = B;//*Ku;
 sysCL = syslin('c', Acl, Bcl, C);
-u = ones(1, length(t));
-X = ltitr(Acl, Bcl, u);
+//u = ones(1, length(t));
+//X = ltitr(Acl, Bcl, u);
 
-plot(t,X(1,:));
+X0=[30/180*%pi 0 0 0];
+X=zeros(4,length(t));
+X(:,1) = X0';
+Vref = 0;
+//Va = zeros(length(t),1);
+for i=2:length(t)
+//    Va(i) = Vref -K2(1)*X(1,i)-K2(2)*X(2,i)-K2(3)*X(3,i)-K2(4)*X(4,i);
+//    X(:,i+1)=A*X(:,i)+B*Va(i); 
+    Va(i-1) = Vref - (K2(1)*X(1,i-1)+K2(2)*X(2,i-1)+K2(3)*X(3,i-1)+K2(4)*X(4,i-1));
+    X(:,i)=A*X(:,i-1)+B*Va(i-1);
+end
+Va(length(t)) = 0;
+plot(t,Va);
+//plot(t,X(1,:));
 //plot(t,u);
