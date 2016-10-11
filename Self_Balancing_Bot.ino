@@ -27,12 +27,8 @@
 #include <I2Cdev.h>
 
 //#define __BOARD_YUN__
-#undef USE_NILRTOS
 
 #include <MPU6050.h>
-#ifdef USE_NILRTOS
-#include <NilRTOS.h>
-#endif // USE_NIL_RTOS
 
 #include "board.h"
 #include "imu_mpu6050.h"
@@ -54,20 +50,11 @@
 #else error "Unreconized ARDUINO BOARD"
 #endif
 
-/*
- *	NIL RTOS Section
- */
-#ifdef USE_NILRTOS
-
-#include <NilTimer1.h>
-
-#define STACKSIZE	32
-#endif // USE_NILRTOS
-
 //#define PROMPT		"CALLOGERO>"
 #define CMD_STRING_LEN	32
 #define DECIMATION		100
 #define AXE_TO_USE		2
+#define GYRO_SCALING	16.4	//131.0
 #undef STAND_ALONE
 #undef DEBUG
 //
@@ -100,75 +87,6 @@ void CDC_Task();
 #endif
 
 void initialize_robot();
-
-/*
- *	NIL RTOS  Thread Definition
- */ 
-#ifdef USE_NILRTOS
-extern semaphore_t dmpSem;
-
-NIL_WORKING_AREA(waSelf_Balancing_Thread, STACKSIZE);
-NIL_WORKING_AREA(waControl_Thread, STACKSIZE);
-
-NIL_THREAD(self_balancing_thread, arg)
-{
-	t0 = millis();
-	uint16_t i = 0;
-
-	while (true)
-	{
-		Serial.println(F("Wait IRQ");
-		//nilSemWait(&dmpSem);
-		while (!mpuInterrupt || i == 32768) ;
-		if (mpuInterrupt) Serial.println("IRQ!");
-		mpuInterrupt = false;
-		i = 0;
-
-		imu_read();
-
-		t1 = millis();
-
-		Serial.print("DMP: dT= ");
-		Serial.print(t1);// - t0);
-		Serial.print(":");
-		Serial.print(ypr[0] * 180/M_PI);
-		Serial.print(":");
-		Serial.print(ypr[1] * 180/M_PI);
-		Serial.print(":");
-		Serial.println(ypr[2] * 180/M_PI);
-	}
-}
-
-NIL_THREAD(control_thread, arg)
-{
-	// Start Timer1
-	nilTimer1Start(TIMER1_INTERVAL);
-
-	while(true)
-	{
-		/*
-		nilSemWait(&commandSem);
-		// Execute command
-		switch(command)
-		{
-			case FORWARD: break;
-			case LEFT: break;
-			case RIGHT: break;
-			case BACKWARD: break;
-			case STOP: break;
-		}
-		*/
-		nilTimer1Wait();
-	}
-}
-
-NIL_THREADS_TABLE_BEGIN()
-	NIL_THREADS_TABLE_ENTRY("Self_Balancing", self_balancing_thread, NULL, waSelf_Balancing_Thread, sizeof(waSelf_Balancing_Thread))
-	NIL_THREADS_TABLE_ENTRY("Control", control_thread, NULL, waControl_Thread, sizeof(waControl_Thread))
-NIL_THREADS_TABLE_END()
-
-#endif // USE_NILRTOS
-
 
 //The setup function is called once at startup of the sketch
 void setup()
@@ -207,9 +125,6 @@ void setup()
 	Serial.print(SHELL_PROMPT);
 #endif
 
-#ifdef USE_NILRTOS
-	nilSysBegin();
-#endif
 }
 
 // The loop function is called in an endless loop
@@ -217,15 +132,9 @@ void loop()
 {
 	float compensation;
 //Add your repeated code here
-#ifdef USE_NILRTOS
-	noInterrupts();
-	Serial.print(F("idle #: "));
-	Serial.println(++idleCount);
-	interrupts();
-#else
 	imu_read();
 	double theta = ypr[AXE_TO_USE];// + 0.06;
-	double theta_dot = -((double)gyro[AXE_TO_USE] / 131.0);
+	double theta_dot = -((double)gyro[AXE_TO_USE] / GYRO_SCALING);
 	controller.set_state(theta, theta_dot, 0.0, 0.0);
 	F = controller.calculate();
 
@@ -267,8 +176,6 @@ void loop()
 			//motor.move_B(comp);
 	}
 	
-#endif
-
 #ifdef ARDUINO_AVR_YUN
 	YunClient client = server.accept();
 	if (client)
