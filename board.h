@@ -41,7 +41,10 @@
 
 //bool isConnected = false;
 //bool blinkState = false;
+
+#ifdef USE_DMP
 extern bool dmpReady;
+#endif	// USE_DMP
 
 /*void initialize_robot(void)
 {

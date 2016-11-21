@@ -25,9 +25,12 @@ VectorFloat gravity;
 SEMAPHORE_DECL(dmpSem, 0);
 */
 extern bool blinkState;
-extern bool isConnected;
+//extern bool isConnected;
+
+#ifdef USE_DMP
 extern bool dmpReady;
 extern float ypr[3];
+#endif	// USE_DMP
 
 void imu_isr();
 

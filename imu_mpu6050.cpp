@@ -11,15 +11,22 @@
 #include <helper_3dmath.h>
 */
 
+#include <Arduino.h>
+
+#ifdef USE_DMP
 #include <I2Cdev.h>
 //#include <MPU6050.h>
+
+#endif
 
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
 #include <Wire.h>
 #endif
 
+#ifdef USE_DMP
 #include <MPU6050_6Axis_MotionApps20.h>
 #include <helper_3dmath.h>
+#endif
 
 /*
  * Firmware Configuration session
@@ -47,6 +54,11 @@
 #define sleep(a)	delay(a)
 #endif
 
+//
+//	Global variables used only if MPU6050 DMP is active
+//
+#ifdef USE_DMP
+
 MPU6050 mpu;
 
 bool dmpReady;
@@ -62,9 +74,11 @@ float ypr[3];
 int16_t gyro[3];
 VectorFloat gravity;
 
+#endif
+
 //extern SEMAPHORE_DECL(dmpSem, 1);
-bool blinkState;
-bool isConnected;
+//bool blinkState;
+//bool isConnected;
 
 #ifdef USE_NILRTOS
 SEMAPHORE_DECL(dmpSem, 1);
@@ -72,7 +86,12 @@ SEMAPHORE_DECL(dmpSem, 1);
 
 void imu_init()
 {
-		
+
+//
+//	Section of code used only if MPU6050 DMP is active
+//		
+#ifdef USE_DMP
+
 	uint8_t count = 10;
 	
     // initialize device
@@ -80,7 +99,7 @@ void imu_init()
 //	Console.println(F("Initializing I2C devices..."));
 #else
     Serial.println(F("Initializing I2C devices..."));
-#endif
+#endif	// ARDUINO_AVR_YUN
     mpu.initialize();
 
     // verify connection
@@ -90,7 +109,7 @@ void imu_init()
 #else
     Serial.println(F("Testing device connections..."));
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
-#endif
+#endif	// ARDUINO_AVR_YUN
 /*
     // wait for ready
     Serial.println(F("\nSend any character to begin DMP programming and demo: "));
@@ -103,7 +122,7 @@ void imu_init()
     //Console.println(F("Initializing DMP..."));
 #else
     Serial.println(F("Initializing DMP..."));
-#endif    
+#endif	// ARDUINO_AVR_YUN
 	do {
 	
 		devStatus = mpu.dmpInitialize();
@@ -121,7 +140,7 @@ void imu_init()
 			//Console.println(F("Enabling DMP..."));
 #else			
 			Serial.println(F("Enabling DMP..."));
-#endif
+#endif	// ARDUINO_AVR_YUN
 			mpu.setDMPEnabled(true);
 
 			mpuIntStatus = mpu.getIntStatus();
@@ -131,7 +150,7 @@ void imu_init()
 			//Console.println(F("DMP ready! Waiting for first interrupt..."));
 #else
 			Serial.println(F("DMP ready! Waiting for first interrupt..."));
-#endif
+#endif	// ARDUINO_AVR_YUN
 			dmpReady = true;
 
 			// get expected DMP packet size for later comparison
@@ -155,10 +174,12 @@ void imu_init()
 			Serial.println(F(")"));
 			// New attempt message
 			Serial.println(F("Trying again"));
-#endif
+#endif	// ARDUINO_AVR_YUN
 		}
 	}
 	while (--count);
+
+#endif	// USE_DMP
 	
 	// configure LED for output	
 	pinMode(SOL_LED, OUTPUT);
@@ -185,6 +206,10 @@ void imu_init()
 
 void imu_read()
 {
+	//
+	//	This code is used only if MPU6050 DMP is active
+	//
+#ifdef USE_DMP
 	uint8_t count = 3;
 			
 	// if programming failed, don't try to do anything
@@ -196,7 +221,7 @@ void imu_read()
 	#else	
 	Serial.println(F("DMP is ready!\nAwaiting for IRQ ready flag"));
 	#endif
-#endif
+#endif	// IRQ_DEBUG
 	// wait for MPU interrupt or extra packet(s) available
 /*	while (!mpuInterrupt && fifoCount < packetSize) {
 //		Serial.println("Shouldn't get here...");
@@ -219,7 +244,7 @@ void imu_read()
 		//Console.println(F("FIFO overflow!"));
 #else
 		Serial.println(F("FIFO overflow!"));
-#endif
+#endif	// ARDUINO_AVR_YUN
 
 		// otherwise, check for DMP data ready interrupt (this should happen frequently)
 	} 
@@ -251,7 +276,7 @@ void imu_read()
 				Serial.println(F("\nLOCKED\n"));
 				dmpReady = false;
 				Serial.println(F("DMP stalled, reinitializing..."));
-#endif
+#endif	// ARDUINO_AVR_YUN
 				mpu.reset();
 				if ((devStatus = mpu.dmpInitialize()) == 0)
 				{
@@ -269,7 +294,7 @@ void imu_read()
 					Serial.print(F("DMP reinitialization failed (code "));
 					Serial.print(devStatus);
 					Serial.println(")");
-#endif
+#endif	// ARDUINO_AVR_YUN
 					while (true) {
 						//delay(300);
 						//nilThdSleep(300);
@@ -283,7 +308,7 @@ void imu_read()
 				}
 			}
 		}
-#endif
+#endif	// __USE_ANTILOCK__
 
 	}
 	else {
@@ -293,7 +318,7 @@ void imu_read()
 		#else
 		Serial.print(F("OK "));
 		#endif
-#endif
+#endif	// IRQ_DEBUG
 		count = 3;
 		lastQ = q;
 		mpu.dmpGetGravity(&gravity, &q);
@@ -318,9 +343,11 @@ void imu_read()
 		Serial.print(ypr[2] * 180/M_PI);
 		Serial.print(F("\t"));
 		Serial.println(gyro);
-	#endif
-#endif
+	#endif	// ARDUINO_AVR_YUN
+#endif	// DEBUG
 	}
+#endif	// USE_DMP
+	
 
 	// blink LED to indicate activity
 	blinkState = !blinkState;
@@ -333,28 +360,32 @@ void imu_read()
 
 void imu_reset()
 {
+#ifdef USE_DMP
 	mpu.reset();
 	imu_init();
+#endif	// USE_DMP	
 }
 
 void imu_isr()
 {
-#ifdef IRQ_DEBUG
-	#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
-	//Console.print(F("ISR"));
-	#else
-	Serial.print(F("ISR"));
-	#endif
-#endif
-#ifdef USE_NILRTOS
-	NIL_IRQ_PROLOGUE();
-#endif
-	mpuInterrupt = true;
-#ifdef USE_NILRTOS
-	nilSysLockFromISR();
-	nilSemSignalI(&dmpSem);
-	nilSysUnlockFromISR();
-	NIL_IRQ_EPILOGUE();
-#endif
+#ifdef USE_DMP
+	#ifdef IRQ_DEBUG
+		#ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
+		//Console.print(F("ISR"));
+		#else
+		Serial.print(F("ISR"));
+		#endif	// ARDUINO_AVR_YUN
+		#endif	// IRQ_DEBUG
+		#ifdef USE_NILRTOS
+		NIL_IRQ_PROLOGUE();
+		#endif	// USE_NIL_RTOS
+		mpuInterrupt = true;
+		#ifdef USE_NILRTOS
+		nilSysLockFromISR();
+		nilSemSignalI(&dmpSem);
+		nilSysUnlockFromISR();
+		NIL_IRQ_EPILOGUE();
+		#endif	// USE_NIL_RTOS
+#endif	// USE_DMP
 }
 
