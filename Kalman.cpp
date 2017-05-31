@@ -17,12 +17,16 @@
 Kalman::Kalman() {
     /* We will set the variables like so, these can also be tuned by the user */
     Q_angle = 0.001f;
-    Q_bias = 0.003f;
-    R_measure = 0.03f;
-
-    angle = 0.0f; // Reset the angle
-    bias = 0.0f; // Reset bias
-
+    //Q_bias = 0.003f;
+    //R_measure = 0.03f;
+	Qgyro = 0.003f;
+	Rangle = 0.03f;
+	
+    //angle = 0.0f; // Reset the angle
+    //bias = 0.0f; // Reset bias
+	x_angle = 0.0f;
+	x_bias = 0.0f;
+	
     P[0][0] = 0.0f; // Since we assume that the bias is 0 and we know the starting angle (use setAngle), the error covariance matrix is set like so - see: http://en.wikipedia.org/wiki/Kalman_filter#Example_application.2C_technical
     P[0][1] = 0.0f;
     P[1][0] = 0.0f;
@@ -30,7 +34,7 @@ Kalman::Kalman() {
 };
 
 // The angle should be in degrees and the rate should be in degrees per second and the delta time in seconds
-float Kalman::getAngle(float newAngle, float newRate, float dt) {
+float Kalman::getAngle(float newAngle, float newGyro, float dt) {
     // KasBot V2  -  Kalman filter module - http://www.x-firm.com/?page_id=145
     // Modified by Kristian Lauszus
     // See my blog post for more information: http://blog.tkjelectronics.dk/2012/09/a-practical-approach-to-kalman-filter-and-how-to-implement-it
@@ -38,32 +42,40 @@ float Kalman::getAngle(float newAngle, float newRate, float dt) {
     // Discrete Kalman filter time update equations - Time Update ("Predict")
     // Update xhat - Project the state ahead
     /* Step 1 */
-    rate = newRate - bias;
+    //rate = newRate - bias;
     angle += dt * rate;
 
     // Update estimation error covariance - Project the error covariance ahead
     /* Step 2 */
-    P[0][0] += dt * (dt*P[1][1] - P[0][1] - P[1][0] + Q_angle);
-    P[0][1] -= dt * P[1][1];
+    //P[0][0] += dt * (dt*P[1][1] - P[0][1] - P[1][0] + Q_angle);
+    P[0][0] += Q_angle * dt - (P[0][1] + P[1][0]) * dt;
+	P[0][1] -= dt * P[1][1];
     P[1][0] -= dt * P[1][1];
-    P[1][1] += Q_bias * dt;
-
+    //P[1][1] += Q_bias * dt;
+	P[1][1] += Qgyro * dt;
+	
     // Discrete Kalman filter measurement update equations - Measurement Update ("Correct")
     // Calculate Kalman gain - Compute the Kalman gain
     /* Step 4 */
-    float S = P[0][0] + R_measure; // Estimate error
-    /* Step 5 */
+    //float S = P[0][0] + R_measure; // Estimate error
+    float S = P[0][0] + Rangle;
+	
+	/* Step 5 */
     float K[2]; // Kalman gain - This is a 2x1 vector
     K[0] = P[0][0] / S;
     K[1] = P[1][0] / S;
 
     // Calculate angle and bias - Update estimate with measurement zk (newAngle)
     /* Step 3 */
-    float y = newAngle - angle; // Angle difference
-    /* Step 6 */
-    angle += K[0] * y;
-    bias += K[1] * y;
-
+    //float y = newAngle - angle; // Angle difference
+    float y = newAngle - x_angle;
+	
+	/* Step 6 */
+    //angle += K[0] * y;
+    //bias += K[1] * y;
+	x_angle += K[0] * y;
+	x_bias += K[1] * y;
+	
     // Calculate estimation error covariance - Update the error covariance
     /* Step 7 */
     float P00_temp = P[0][0];

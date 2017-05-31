@@ -18,11 +18,14 @@ _motor motor;
 extern void vUsage(char *str);
 
 _motor::_motor() {
-	// Configure Arduino I/Os
-	pinMode(MOTOR_E1, OUTPUT);
+	// Configure Arduino I/Os	
 	pinMode(MOTOR_M1, OUTPUT);
-	pinMode(MOTOR_E2, OUTPUT);
 	pinMode(MOTOR_M2, OUTPUT);
+#if 0
+	pinMode(MOTOR_E1, OUTPUT);
+	pinMode(MOTOR_E2, OUTPUT);
+#endif	
+
 
 	// Set outputs
 	digitalWrite(MOTOR_E1, LOW);
@@ -61,17 +64,18 @@ void _motor::move_A(int pwm)
 	if (pwmA > 0)
 	{
 		digitalWrite(MOTOR_M1, LOW);
-		analogWrite(MOTOR_E1, pwmA);
+		//analogWrite(MOTOR_E1, pwmA);
 	}
 	else if (pwmA < 0)
 	{
 		digitalWrite(MOTOR_M1, HIGH);
-		analogWrite(MOTOR_E1, -pwmA);
+		//analogWrite(MOTOR_E1, -pwmA);
 	}
-	else
+	analogWrite(MOTOR_E1, pwmA);
+/*	else
 	{
 		this->stop_A();
-	}
+	} */
 }
 
 void _motor::move_B(int pwm)
@@ -94,17 +98,18 @@ void _motor::move_B(int pwm)
 	if (pwmB > 0)
 	{
 		digitalWrite(MOTOR_M2, HIGH);
-		analogWrite(MOTOR_E2, pwmB);
+		//analogWrite(MOTOR_E2, pwmB);
 	}
 	else if (pwmB < 0)
 	{
 		digitalWrite(MOTOR_M2, LOW);
-		analogWrite(MOTOR_E2, -pwmA);
+		//analogWrite(MOTOR_E2, -pwmB);
 	}
-	else
+	analogWrite(MOTOR_E2, pwmB);
+/*	else
 	{
 		stop_B();
-	}
+	} */
 }
 
 void _motor::stop_A()

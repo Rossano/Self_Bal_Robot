@@ -21,8 +21,8 @@
 //
 #define VECTOR_SIZE		4	// Size of the state space vector or state Matrix
 
-#define K1_DEFAULT		-500//-1560
-#define K2_DEFAULT		-75//-270
+#define K1_DEFAULT		50//-1560
+#define K2_DEFAULT		75//-270
 #define K3_DEFAULT		-120//-480
 #define K4_DEFAULT		-25//-90
 //namespace controller {

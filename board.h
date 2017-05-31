@@ -22,10 +22,22 @@
 //
 //	Motor Control Pin
 //
+
+#define __USE_PWM__
+
+#ifdef __USE_PWM__
 #define MOTOR_E1	5
 #define MOTOR_M1	4
 #define MOTOR_E2	6
 #define MOTOR_M2	7
+#elif defined(__USE_PLL__)
+#define MOTOR_E1	4
+#define MOTOR_M1	5
+#define MOTOR_E2	7
+#define MOTOR_M2	6
+#else
+#error "L298 Control mode not defined!"
+#endif
 //
 //	IMU Pin
 //

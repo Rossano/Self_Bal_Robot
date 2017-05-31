@@ -65,9 +65,12 @@
 #define CMD_STRING_LEN	32
 #define DECIMATION		100
 #define AXE_TO_USE		2
-#define GYRO_SCALING	16.4	//131.0
+#define GYRO_SCALING	131.0	//	+/- 250 °/s //	16.4	// +/- 2000°/s
+//#define RESTRICT_PITCH
 #undef STAND_ALONE
 #undef DEBUG
+//#define DEBUG
+
 //
 //	Global Data
 //
@@ -153,8 +156,10 @@ void setup()
 	i2cData[1] = 0x00;
 	i2cData[2] = 0x00;
 	i2cData[3] = 0x00; 
-	while (i2cWrite(0x19, i2cData, 4, false)) ;
-	while (i2cWrite(0x68, 0x01, true)) ;
+	while (i2cWrite(0x19, i2cData, 4, false)) ;		//	Set datarate divider to 8, datatate 1Ks/s
+	while (i2cWrite(0x1B, 0x00, 1, false)) ;		//	Set Gyro Range to 2000 rad/s
+	while (i2cWrite(0x1C, 0x00, 1, false)) ;		//	Set Accelleration range to +/- 2g
+	while (i2cWrite(0x6B, 0x01, true)) ;			//	Set clock source to gyro X axes (accurate)
 	while (i2cRead(0x75, i2cData, 1)) ;
 	if (i2cData[0] != 0x68) 
 	{
@@ -165,21 +170,24 @@ void setup()
 	delay (100);	// Wait for sensor to stabilize
 	
 	//	Set Kalman and gyro starting angles
-	while (i2cRead(0x33, i2cData, 6)) ;
+	//while (i2cRead(0x33, i2cData, 6)) ;
+	while (i2cRead(0x3B, i2cData, 6)) ;		// Read ACC values
 	accX = (i2cData[0] << 8) | i2cData[1];
 	accY = (i2cData[2] << 8) | i2cData[3];
 	accZ = (i2cData[4] << 8) | i2cData[5];
 	
 #ifdef RESTRICT_PITCH
-	double roll = atan2(accY, accZ);
-	double pitch = atan(-accX / sqrt(accY*accY + accZ*accZ));
+	#error "Should not get here!!!!"
+	//double roll = atan2(accY, accZ);
+	double roll = atan2(-accZ, accX);
+	//double pitch = atan(-accX / sqrt(accY*accY + accZ*accZ));
 #else
-	double roll = atan(accY / sqrt(accX*accX + accZ*accZ));
-	double pitch = atan2(-accX, accZ);
+	double roll = atan2(-accZ, accX); //atan(accY / sqrt(accX*accX + accZ*accZ));
+	//double pitch = atan2(-accX, accZ);
 #endif	
 
 	kalmanX.setAngle(roll);
-	kalmanY.setAngle(pitch);
+	//kalmanY.setAngle(pitch);
 	
 	timer = micros();
 #endif
@@ -193,7 +201,152 @@ void setup()
 	Serial.print(SHELL_PROMPT);
 #endif
 
+	#if 0
+Serial.println("Motor control test, neverending loop!");
+	while (true)
+	{
+		Serial.println("FORWARD....");
+		for(int val = 0; val <= 255; val += 5)
+		{
+			motor.move_A(val);
+			motor.move_B(val);
+			delay (30);
+		}
+		for(int val = 255; val; val -= 5)
+		{
+			motor.move_A(val);
+			motor.move_B(val);
+			delay(30);
+		}
+		Serial.println("BACKWARD....");
+		for(int val = 0; val >= -255; val -= 5)
+		{
+			motor.move_A(val);
+			motor.move_B(val);
+			delay (30);
+		}
+		for(int val = -255; val <= 0; val += 5)
+		{
+			motor.move_A(val);
+			motor.move_B(val);
+			delay(30);
+		}
+	}
+#endif
+Serial.print("dT"); Serial.print(": ");
+Serial.print("level"); Serial.print(",");
+Serial.print("Motor1%"); Serial.print(",");
+Serial.print("Motor2%"); Serial.print(",");
+Serial.print("torque"); Serial.print(",");
+Serial.print("zAngle"); Serial.print(",");
+Serial.println("gyroAngle_dt");
 }
+#define USE_PID
+
+#ifdef USE_PID
+
+#define ACCEL_GAIN	18
+#define GYRO_GAIN	5
+#define ANGLE_GAIN	1.20
+
+#define MOTOR1_FULL_FORWARD	255
+#define MOTOR1_FULL_REVERSE	-255
+#define MOTOR2_FULL_FORWARD 255
+#define MOTOR2_FULL_REVERSE	-255
+
+unsigned int STD_LOOP_TIME	= 9;	// 10ms
+unsigned int lastLoopTime = STD_LOOP_TIME;
+unsigned int lastLoopUsefulTime = STD_LOOP_TIME;
+unsigned long loopStartTime = 0;
+float cycle_time = 0.01;
+float steer = 0.0;
+
+float overallGain;
+float SG_filter_result;
+float z_acc;
+float z_acc_deg;
+float gAngle_deg;
+float gAnglerate_deg;
+float gAngle_rad;
+float gAnglerate_rad;
+float gyroAngle_dt;
+float zAngle;
+
+float balance_torque;
+float level = 0.0;
+float cur_speed = 0.0;
+float balanceTrim = 0.0;
+float set_point;
+
+float ti_constant = 3;
+float aa_constant = 0.005;
+
+signed char Motor1percent;
+signed char Motor2percent;
+
+void pid_calculation()
+{
+	gAngle_deg = (float)angle/3.14159*180;
+	// Angle gain
+	SG_filter_result = (float)SG_filter_result * ANGLE_GAIN;
+	z_acc_deg = (float)((SG_filter_result - (80 + balanceTrim)) * (1.0));
+	
+	if (z_acc_deg < -72) z_acc_deg = -72;
+	if (z_acc_deg > 72) z_acc_deg = 72;
+	
+	gAngle_deg = (float)(angle_dot);
+	if (gAngle_deg < -110) gAngle_deg = -110;
+	if (gAngle_deg > 110) gAngle_deg = 110;
+	
+	gyroAngle_dt = (float) ti_constant * cycle_time * gAngle_deg;
+	gAngle_rad = (float)gAngle_deg * DEG_TO_RAD;
+	
+	// Complementary filter
+	zAngle = (float)((1-aa_constant)*zAngle + gyroAngle_dt) + (aa_constant * z_acc_deg);
+	angle = (float)zAngle * DEG_TO_RAD;
+	
+	balance_torque = (float)(ACCEL_GAIN * angle + GYRO_GAIN * gAngle_rad);
+	cur_speed = (float)(cur_speed + (angle * 6 * cycle_time)) * 0.999;
+	level = (float)(balance_torque + cur_speed) * overallGain;
+}
+
+void set_motor()
+{
+	uint8_t cSpeedVal_Motor1;
+	uint8_t cSpeedVal_Motor2;
+	
+	level *= 20;
+	if (level < -100) level = -100;
+	if (level > 100) level = 100;
+	
+	steer = (float) 0 * 0.09;
+	
+	Motor1percent = (signed char)level + steer;
+	Motor2percent = (signed char)level - steer;
+	if (Motor1percent < -100) Motor1percent = -100;
+	if (Motor1percent > 100) Motor1percent = 100;
+	if (Motor2percent < -100) Motor2percent = -100;
+	if (Motor2percent > 100) Motor2percent = 100;
+	
+	cSpeedVal_Motor1 = map(Motor1percent, -100, 100, MOTOR1_FULL_REVERSE, MOTOR1_FULL_FORWARD);
+	cSpeedVal_Motor2 = map(Motor2percent, -100, 100, MOTOR2_FULL_REVERSE, MOTOR2_FULL_FORWARD);
+	
+	motor.move_A(cSpeedVal_Motor1);
+	motor.move_B(cSpeedVal_Motor2);
+}
+
+void plot_data()
+{
+	Serial.print(lastLoopTime); Serial.print(": ");
+	Serial.print(level); Serial.print(",");
+	Serial.print(Motor1percent); Serial.print(",");
+	Serial.print(Motor2percent); Serial.print(",");
+	Serial.print(balance_torque); Serial.print(",");
+	Serial.print(zAngle); Serial.print(",");
+	Serial.println(gyroAngle_dt);	
+}
+
+#endif
 
 // The loop function is called in an endless loop
 void loop()
@@ -206,14 +359,39 @@ void loop()
 	double theta = ypr[AXE_TO_USE];// + 0.06;
 	double theta_dot = -((double)gyro[AXE_TO_USE] / GYRO_SCALING);
 #endif
+	
+	
+#ifdef USE_PID
+	while(true)
+	{
+		readIMUData();
+		pid_calculation();
+		set_motor();
+		// Sleep T = 10ms
+		lastLoopUsefulTime = millis() - loopStartTime;
+		if (lastLoopUsefulTime < STD_LOOP_TIME) delay(STD_LOOP_TIME - lastLoopUsefulTime);
+		lastLoopTime = millis() - loopStartTime;
+		loopStartTime = millis();
+		// end timing loop
+		
+		// soft start
+		if (overallGain < 0.5) overallGain = (float)overallGain + 0.005;
+		if (overallGain > 0.5) overallGain = 0.5;
+		plot_data();
+	}
+#endif
 	readIMUData();
 	controller.set_state(angle, angle_dot, 0.0, 0.0);
 	F = controller.calculate();
 
 	//compensation = pid.calculate(ypr[1] - 3.1415 / 2);
-	pwm = map(F, -1, 1, -255, 255);
-//	pwm = map_double(F, -100, 100, -255, 255);
-
+	//->pwm = map(F, -100, 100, -255, 255);
+	pwm = map_double(F, -50, 50, -255, 255);
+	//pwm = F / 5;
+//	pwm = constrain(F, -255, 255);
+	if (pwm < -255) pwm = -255;
+	else if (pwm > 255) pwm = 255;
+	
 	if (bEnableStateControl) {
 		
 		switch (eMotorMove) {
@@ -277,6 +455,8 @@ void loop()
 		cmdReady = false;
 		inBufCount = 0;
 	}
+	char **foo;
+	vGetValues(0, foo);
 	if(++count == DECIMATION)
 	{
 //		Serial.print(millis());
@@ -292,7 +472,7 @@ void loop()
 	//
 	//	Place a delay to let the sensors to stabilize
 	//
-	delay(2000);
+	//delay(100);
 }
 
 #ifdef ARDUINO_AVR_YUN
@@ -396,23 +576,23 @@ void vGetValues(int argc, char *argv[]) { 		// Get the IMU and feedback values
 #ifdef ARDUINO_AVR_YUN //__BOARD_YUN__
 	Console.print(F(""));
 	Console.print(millis());
-	Console.print(F(" "));
-#ifdef DEBUG
-	Console.print(ypr[0]/3.1415*180);
-	Console.print(F(" "));
-	Console.print(ypr[1]/3.1415*180);
-	Console.print(F(" "));
-	Console.print(ypr[2]/3.1415*180);
-	Console.print(F(" "));
-	//Serial.print(pid.getError());
-#else
-	Console.print(ypr[AXE_TO_USE]/3.1415*180);
-	Console.print(F(" "));
-#endif
+	Console.print(F(","));
+	#ifdef DEBUG
+		Console.print(ypr[0]/3.1415*180);
+		Console.print(F(","));
+		Console.print(ypr[1]/3.1415*180);
+		Console.print(F(","));
+		Console.print(ypr[2]/3.1415*180);
+		Console.print(F(","));
+		//Serial.print(pid.getError());
+	#else
+		Console.print(ypr[AXE_TO_USE]/3.1415*180);
+		Console.print(F(","));
+	#endif
 	Console.print(gyro[AXE_TO_USE]);
-	Console.print(F(" "));
+	Console.print(F(","));
 	Console.print(F);
-	Console.print(F(" "));
+	Console.print(F(","));
 	Console.println(pwm);
 #else
 	//
@@ -420,43 +600,44 @@ void vGetValues(int argc, char *argv[]) { 		// Get the IMU and feedback values
 	//
 	Serial.print(F("MPU:"));
 	Serial.print(millis());
-	Serial.print(F(" "));
-#ifdef DEBUG
-	Serial.print(ypr[0]/3.1415*180);
-	Serial.print(F(" "));
-	Serial.print(ypr[1]/3.1415*180);
-	Serial.print(F(" "));
-	Serial.print(ypr[2]/3.1415*180);
-	Serial.print(F(" "));
-	//Serial.print(pid.getError());
-#else
-	//Serial.print(ypr[AXE_TO_USE]/3.1415*180);
-	#ifdef USE_DMP
+	Serial.print(F(","));
+	#ifdef DEBUG
 		Serial.print(ypr[0]/3.1415*180);
-		Serial.print(F(" "));
+		Serial.print(F(","));
 		Serial.print(ypr[1]/3.1415*180);
-		Serial.print(F(" "));
+		Serial.print(F(","));
 		Serial.print(ypr[2]/3.1415*180);
-		Serial.print(F(" "));
-		Serial.print(gyro[AXE_TO_USE]);
+		Serial.print(F(","));
+		//Serial.print(pid.getError());
+	#else
+		//Serial.print(ypr[AXE_TO_USE]/3.1415*180);
+		#ifdef USE_DMP
+			Serial.print(ypr[0]/3.1415*180);
+			Serial.print(F(","));
+			Serial.print(ypr[1]/3.1415*180);
+			Serial.print(F(","));
+			Serial.print(ypr[2]/3.1415*180);
+			Serial.print(F(","));
+			Serial.print(gyro[AXE_TO_USE]);
+		#endif
+		#ifdef USE_KALMAN_LIB
+	/*		Serial.print(kalAngleX/3.1415*180);
+			Serial.print(F(","));
+			Serial.print(kalAngleY/3.1415*180);
+			Serial.print(F(","));
+			Serial.print(gyroX / GYRO_SCALING);
+			Serial.print(F(","));
+			Serial.print(gyroY / GYRO_SCALING);
+			Serial.print(F(","));
+			Serial.print(gyroZ / GYRO_SCALING);
+			Serial.print(F(","));*/
+		#endif
 	#endif
-	#ifdef USE_KALMAN_LIB
-		Serial.print(kalAngleX/3.1415*180);
-		Serial.print(F(" "));
-		Serial.print(kalAngleY/3.1415*180);
-		Serial.print(F(" "));
-		Serial.print(gyroX / GYRO_SCALING);
-		Serial.print(F(" "));
-		Serial.print(gyroY / GYRO_SCALING);
-		Serial.print(F(" "));
-		Serial.print(gyroZ / GYRO_SCALING);
-		Serial.print(F(" "));
-	#endif
-#endif
 	//Serial.print(gyro[AXE_TO_USE]);
-	Serial.print(F(" "));
+	Serial.print(angle*180/3.14159);
+	Serial.print(F(","));
 	Serial.print(F);
-	Serial.print(F(" "));
+	Serial.print(F(","));
 	Serial.println(pwm);
 #endif
 }
@@ -477,7 +658,8 @@ void readIMUData()
 #endif
 #ifdef USE_KALMAN_LIB
 	//	Update values
-	while (i2cRead(0x38, i2cData, 14)) ;
+	//while (i2cRead(0x38, i2cData, 14)) ;
+	while (i2cRead(0x3B, i2cData, 14)) ;				// Read ACC, temperature and Gyro
 	accX = ((i2cData[0] << 8) | i2cData[1]);
 	accY = ((i2cData[2] << 8) | i2cData[3]);
 	accZ = ((i2cData[4] << 8) | i2cData[5]);
@@ -490,39 +672,75 @@ void readIMUData()
 	timer = micros();
 	
 	#ifdef RESTRICT_PITCH
-		double roll = atan2(accY, accZ);
-		double pitch = atan(-accX / sqrt(accY*accY + accZ*accZ));
+		#error "Should not get here!!!!"
+		//double roll = atan2(accY, accZ);
+		double roll = atan2(-accZ, accX);
+		//double pitch = atan(-accX / sqrt(accY*accY + accZ*accZ));
 	#else
-		double roll = atan(accY / sqrt(accX*accX + accZ*accZ));
-		double pitch = atan2(-accX, accZ);
+		double roll = atan ( sqrt(accX*accX + accY*accY) / (1.0 * accZ)) ;//- 3.14159/2;
+		//if (accZ < 0) roll = -roll;
+		//double roll = atan(accY / sqrt(accX*accX + accZ*accZ));
+		//double pitch = atan2(-accX, accZ);
 	#endif
 	
-	double gyroXrate = gyroX / GYRO_SCALING;
-	double gyroYrate = gyroY / GYRO_SCALING;
+	//double gyroXrate = gyroX / GYRO_SCALING;
+	//double gyroYrate = gyroY / GYRO_SCALING;
+	double gyroZrate = gyroZ / GYRO_SCALING;
 	
 	#ifdef RESTRICT_PITCH
+	#error "Should not get here!!!!"
 		if((roll < -90 && kalAngleX > 90) || (roll > 90 && kalAngleX < -90))
 		{
 			kalmanX.setAngle(roll);
 			kalAngleX = roll;
 		}
 		else
-			kalAngleX = kalmanX.getAngle(roll, gyroYrate, dt);
+			kalAngleX = kalmanX.getAngle(roll, gyroZrate, dt);
 			
 			if(abs(kalAngleX) > 90) gyroXrate = - gyroXrate;
-			kalAngleY = kalmanY.getAngle(pitch, gyroYrate, dt);
+			//kalAngleY = kalmanY.getAngle(pitch, gyroYrate, dt);
 	#else
+		/*
 		if((pitch < -90 && kalAngleY > 90) || (pitch > 90 && kalAngleY < -90))
 		{
 			kalmanY.setAngle(pitch);
 			kalAngleY = pitch;
 		}
 		else
-			kalAngleY = kalmanY.getAngle(pitch, gyroYrate, dt);
+			kalAngleY = kalmanY.getAngle(pitch, gyroYrate, dt);*/
+		//if((roll < -90 && kalAngleX > 90) || (roll > 90 && kalAngleX < -90))
+		if((roll < -3.14159/2 && kalAngleX > 3.14159/2) || (roll > 3.14159/2 && kalAngleX < -3.14159/2))
+		{
+			kalmanX.setAngle(roll);
+			kalAngleX = roll;
+		}
+		else
+			kalAngleX = kalmanX.getAngle(roll, gyroZrate, dt);
 	#endif
 	// Output the result
 	angle = roll;
-	angle_dot = gyroXrate;
+	//angle = kalAngleX;
+	angle_dot = gyroZrate;
+	/*
+	// Plot result
+	Serial.print("debug: ");
+	Serial.print(accX); Serial.print(F(","));
+	Serial.print(accY); Serial.print(F(","));
+	Serial.print(accZ); Serial.print(F(","));	
+	Serial.print(gyroX); Serial.print(F(","));
+	Serial.print(gyroY); Serial.print(F(","));
+	Serial.print(gyroZ); Serial.print(F(","));
+	Serial.print(angle/3.1415*180);
+	//Serial.print(F(","));
+	//Serial.print(kalAngleY/3.1415*180);
+	Serial.print(F(","));
+	Serial.print(gyroX / GYRO_SCALING);
+	Serial.print(F(","));
+	Serial.print(gyroY / GYRO_SCALING);
+	Serial.print(F(","));
+	Serial.print(gyroZ / GYRO_SCALING);
+	Serial.print(F(","));
+	*/
 #endif
 
 }
